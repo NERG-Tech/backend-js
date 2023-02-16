@@ -1,110 +1,78 @@
-import React, { useState, useEffect } from "react";
 import "./App.css";
-
-// import Bluetooth from "./Bluetooth";
+import { useAuth } from "./auth";
+import { useEffect, useRef, useState } from "react";
+import { Button, Typography, Box } from "@mui/material";
+import { Link } from "react-router-dom";
+import * as apiService from "./api-service";
+import { CLOUD_FUNCTIONS_ORIGIN } from "./functions-origin";
 
 function App() {
-  const [msg, setMsg] = useState(null);
-  let options = { acceptAllDevices: true };
+  const { user, loading } = useAuth();
+  const [dataState, setDataState] = useState(undefined);
+  const secureNoteRef = useRef(undefined);
 
-  const get = async () => {
-    setMsg(null);
-    let str = "";
-    await navigator.bluetooth.requestDevice(options).then((device) => {
-      str = str + "> Name:             " + device.name + "<br />";
-      str = str + "> Id:             " + device.id + "<br />";
-      str =
-        str +
-        "> gatt.connected:             " +
-        device.gatt.connected +
-        "<br />";
-    });
-
-    navigator.bluetooth.getAvailability().then((isBluetoothAvailable) => {
-      str =
-        str +
-        `> Bluetooth is ${isBluetoothAvailable ? "available" : "unavailable"}` +
-        "<br />";
-    });
-
-    if ("onavailabilitychanged" in navigator.bluetooth) {
-      navigator.bluetooth.addEventListener(
-        "availabilitychanged",
-        function (event) {
-          str =
-            str +
-            `> Bluetooth is ${event.value ? "available" : "unavailable"}` +
-            "<br />";
+  useEffect(() => {
+    (async () => {
+      if (!loading) {
+        if (user) {
+          setDataState("loading");
+          const userIdToken = await user.getIdToken();
+          try {
+            const { secureNote } = await apiService.getUserData({
+              userIdToken,
+              userId: user.uid,
+            });
+            secureNoteRef.current = secureNote;
+            setDataState("success");
+          } catch {
+            setDataState("error");
+          }
         }
-      );
-    }
-    setMsg(str);
-    onWatchAdvertisementsButtonClick();
-  };
+      }
+    })();
+  }, [user, loading]);
 
-  function onWatchAdvertisementsButtonClick() {
-    console.log("Requesting any Bluetooth device...");
-    navigator.bluetooth
-      .requestDevice({
-        // filters: [...] <- Prefer filters to save energy & show relevant devices.
-        acceptAllDevices: true,
-      })
-      .then((device) => {
-        console.log("> Requested " + device.name);
-
-        device.addEventListener("advertisementreceived", (event) => {
-          console.log("Advertisement received.");
-          console.log("  Device Name: " + event.device.name);
-          console.log("  Device ID: " + event.device.id);
-          console.log("  RSSI: " + event.rssi);
-          console.log("  TX Power: " + event.txPower);
-          console.log("  UUIDs: " + event.uuids);
-          event.manufacturerData.forEach((valueDataView, key) => {
-            logDataView("Manufacturer", key, valueDataView);
-          });
-          event.serviceData.forEach((valueDataView, key) => {
-            logDataView("Service", key, valueDataView);
-          });
-        });
-
-        console.log('Watching advertisements from "' + device.name + '"...');
-        return device.watchAdvertisements();
-      })
-      .catch((error) => {
-        console.log("Argh! " + error);
-      });
-  }
-
-  const logDataView = (labelOfDataSource, key, valueDataView) => {
-    const hexString = [...new Uint8Array(valueDataView.buffer)]
-      .map((b) => {
-        return b.toString(16).padStart(2, "0");
-      })
-      .join(" ");
-    const textDecoder = new TextDecoder("ascii");
-    const asciiString = textDecoder.decode(valueDataView.buffer);
-    console.log(
-      `  ${labelOfDataSource} Data: ` +
-        key +
-        "\n    (Hex) " +
-        hexString +
-        "\n    (ASCII) " +
-        asciiString
-    );
-  };
-
+  const child = loading ? (
+    <></>
+  ) : user ? (
+    dataState === "loading" ? (
+      <Typography>Getting your data...</Typography>
+    ) : dataState === "error" ? (
+      <Typography>An error occured.</Typography>
+    ) : dataState === "success" ? (
+      <div>
+        <Typography variant="h6">Secure note</Typography>
+        <Typography>{secureNoteRef.current}</Typography>
+      </div>
+    ) : undefined
+  ) : (
+    <div>
+      <Typography>You're not signed in</Typography>
+      <Box
+        sx={{
+          marginTop: 2,
+        }}
+      >
+        <Box sx={{ color: "black" }}>{CLOUD_FUNCTIONS_ORIGIN}</Box>
+        <Button LinkComponent={Link} to="/signin">
+          Sign in
+        </Button>
+        <Button LinkComponent={Link} to="/signup" sx={{ marginLeft: 2 }}>
+          Sign up
+        </Button>
+      </Box>
+    </div>
+  );
   return (
-    <div className="App">
-      <header className="App-header">
-        <button onClick={get} style={{ padding: "10px", fontWeight: "bold" }}>
-          click
-        </button>
-        {/* <div>{msg}</div> */}
-        <div
-          dangerouslySetInnerHTML={{ __html: msg }}
-          style={{ lineHeight: "170%" }}
-        ></div>
-      </header>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100%",
+      }}
+    >
+      {child}
     </div>
   );
 }
