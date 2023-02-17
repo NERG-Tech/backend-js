@@ -28,3 +28,29 @@ export async function getUserData({ userIdToken, userId }) {
   });
   return res.data;
 }
+
+export async function addPlayer(sex, age, weight, height) {
+  console.log(
+    " sex, age, weight, height  in api-service",
+    sex,
+    age,
+    weight,
+    height
+  );
+
+  const url = `${apiUrl}/player`;
+  console.log(url);
+  let res;
+  try {
+    res = await axios.post(url, {
+      sex,
+      age,
+      weight,
+      height,
+    });
+    console.log(res.data);
+  } catch (error) {
+    console.error(error.data); // NOTE - use "error.response.data` (not "error")
+  }
+  return res.data;
+}

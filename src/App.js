@@ -64,16 +64,23 @@ function App() {
     </div>
   );
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100%",
-      }}
-    >
-      {child}
-    </div>
+    <>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100%",
+        }}
+      >
+        {child}
+      </div>
+      <Box>
+        <Button LinkComponent={Link} to="/add-player">
+          Add a player
+        </Button>
+      </Box>
+    </>
   );
 }
 
