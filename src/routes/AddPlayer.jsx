@@ -21,37 +21,35 @@ export default function AddPlayer() {
   } = useForm();
 
   const [success, setSuccess] = useState(false);
-
-  const [errorMessage, setErrorMessage] = useState(undefined);
+  const [errorMessage, setErrorMessage] = useState(false);
   //   const navigate = useNavigate();
   //   const { signIn } = useAuth();
 
   const onSubmit = async (data) => {
+    console.log("data", data);
     const { weight, height, age, sex } = data;
+    setSuccess(false);
     setIsSigningIn(true);
-    setErrorMessage(undefined);
+    setErrorMessage(false);
 
     try {
-      const result = apiService.addPlayer(sex, age, weight, height);
-      console.log(result);
-      if (result._writeTime) {
+      await apiService.addPlayer(sex, age, weight, height).then((result) => {
+        console.log(result);
         setSuccess(true);
-      }
-      //   await signIn({ email, password });
-      //   navigate("/");
+        setErrorMessage(false);
+      });
     } catch (error) {
-      const res = error.response;
-      if (res) {
-        const code = res.data?.error?.code;
-        console.log(code);
-      }
-      setErrorMessage("Can't sign in right now");
+      setSuccess(false);
+      setErrorMessage(true);
     } finally {
       setIsSigningIn(false);
     }
   };
 
   const [isSigningIn, setIsSigningIn] = useState(false);
+
+  console.log("errorMessage", errorMessage);
+  console.log("success", success);
 
   return (
     <Box
@@ -137,8 +135,12 @@ export default function AddPlayer() {
           }}
         />
         <Button variant="contained" type="submit" sx={{ marginTop: 2 }}>
-          Sign in
+          Add a Player
         </Button>
+
+        <Box sx={{ pt: 2 }}>
+          <Typography>{success && "Player is successfully added."}</Typography>
+        </Box>
         <Box
           sx={{
             marginTop: 2,
@@ -151,15 +153,10 @@ export default function AddPlayer() {
             }}
             color="error"
           >
-            {errorMessage}
+            {"Can't add the player. Check your input."}
           </Typography>
         </Box>
       </form>
-      <Box>
-        <Typography>
-          {success && "Add a player is successfully done."}
-        </Typography>
-      </Box>
     </Box>
   );
 }

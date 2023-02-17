@@ -6,21 +6,16 @@ async function addPlayer(req, res) {
   console.log(sex, age, weight, height);
 
   const playersDB = firestore.collection("players");
-  const liam = playersDB.doc("one-player");
+  const onePlayer = playersDB.doc("one-player");
 
-  await liam
-    .set({
-      sex: sex,
-      age: age,
-      height: height,
-      weight: weight,
-    })
-    .then((result) => {
-      res.status(200).json({ result: result });
-    })
-    .catch((error) => {
-      res.status(400).json({ error: error });
-    });
+  const result = await onePlayer.set({
+    sex: sex,
+    age: age,
+    height: height,
+    weight: weight,
+  });
+
+  res.status(200).json({ result: result });
 }
 
 module.exports = addPlayer;
