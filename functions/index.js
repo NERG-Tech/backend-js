@@ -16,6 +16,7 @@ const serviceAccount = require("./service-account-key.json");
 const validateEmailAndPassword = require("./express/middleware/validate-email-and-password");
 const firebaseAuth = require("./express/middleware/firebase-auth");
 const validatePlayer = require("./express/middleware/validate-add-player");
+const validateWaistHip = require("./express/middleware/validate-waist-hip");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -27,6 +28,7 @@ const register = require("./express/routes/register");
 const login = require("./express/routes/login");
 const getUser = require("./express/routes/get-user");
 const addPlayer = require("./express/routes/add-player");
+const addWaistHip = require("./express/routes/add-waist-hip");
 
 const app = express();
 app.use(cors());
@@ -37,5 +39,6 @@ app.post("/login", validateEmailAndPassword, login);
 app.post("/register", validateEmailAndPassword, register);
 app.get("/users/:id", firebaseAuth, getUser);
 app.post("/player", validatePlayer, addPlayer);
+app.post("/player/wh", validateWaistHip, addWaistHip);
 
 exports.api = functions.https.onRequest(app);

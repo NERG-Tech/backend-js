@@ -30,16 +30,29 @@ function getBmiStatus(bmi) {
 // Lean Body Mass
 
 function getLeanBodyMassMen(weight, height) {
-  console.log(
-    "lean body mass, ",
-    parseFloat((0.407 * weight + 0.267 * height - 19.2).toFixed(8))
-  );
-  return parseFloat((0.407 * weight + 0.267 * height - 19.2).toFixed(2));
+  let obj = {
+    kg: unitchange.twoDigitDecimal(
+      parseFloat((0.407 * weight + 0.267 * height - 19.2).toFixed(2))
+    ),
+    pounds: unitchange.twoDigitDecimal(
+      unitchange.changeKgToPound(
+        parseFloat((0.407 * weight + 0.267 * height - 19.2).toFixed(2))
+      )
+    ),
+  };
+  return obj;
 }
 
 function getLeanBodyMassWomen(weight, height) {
-  console.log("lean body mass, ", 0.252 * weight + 0.473 * height - 48.3);
-  return unitchange.twoDigitDecimal(0.252 * weight + 0.473 * height - 48.3);
+  let obj = {
+    kg: unitchange.twoDigitDecimal(
+      unitchange.twoDigitDecimal(0.252 * weight + 0.473 * height - 48.3)
+    ),
+    pounds: unitchange.twoDigitDecimal(
+      unitchange.changeKgToPound(0.252 * weight + 0.473 * height - 48.3)
+    ),
+  };
+  return obj;
 }
 
 // IBW - Robin formula
@@ -59,11 +72,17 @@ function getIdealBodyWeight(heightInCentimeter, sex) {
     if (sex === "male") {
       let rest = heightInInch - 61; // heightInInch 66 - 61 = 6 inches
       let ideal = 52 + rest * 1.9; // 52 Kg + 6 * 1.9
-      return Math.round(ideal);
+      return {
+        kg: Math.round(ideal),
+        pounds: unitchange.changeKgToPound(Math.round(ideal)),
+      };
     } else {
       let rest = heightInInch - 61;
       let ideal = 49 + rest * 1.7;
-      return Math.round(ideal);
+      return {
+        kg: Math.round(ideal),
+        pounds: unitchange.changeKgToPound(Math.round(ideal)),
+      };
     }
   }
 }
@@ -72,18 +91,39 @@ function getIdealBodyWeight(heightInCentimeter, sex) {
 
 function getBodyWaterWeight(weightInKg, heightInCentimeter, age, sex) {
   if (sex === "male") {
-    return parseFloat(
-      (
-        2.447 -
-        0.09156 * age +
-        0.1074 * heightInCentimeter +
-        0.3362 * weightInKg
-      ).toFixed(2)
-    );
+    return {
+      kg: parseFloat(
+        (
+          2.447 -
+          0.09156 * age +
+          0.1074 * heightInCentimeter +
+          0.3362 * weightInKg
+        ).toFixed(2)
+      ),
+      pounds: unitchange.changeKgToPound(
+        parseFloat(
+          (
+            2.447 -
+            0.09156 * age +
+            0.1074 * heightInCentimeter +
+            0.3362 * weightInKg
+          ).toFixed(2)
+        )
+      ),
+    };
   } else {
-    return parseFloat(
-      (-2.097 + 0.1069 * heightInCentimeter + 0.2466 * weightInKg).toFixed(2)
-    );
+    return {
+      kg: parseFloat(
+        (-2.097 + 0.1069 * heightInCentimeter + 0.2466 * weightInKg).toFixed(2)
+      ),
+      pounds: unitchange.changeKgToPound(
+        parseFloat(
+          (-2.097 + 0.1069 * heightInCentimeter + 0.2466 * weightInKg).toFixed(
+            2
+          )
+        )
+      ),
+    };
   }
 }
 

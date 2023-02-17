@@ -19,10 +19,13 @@ export default function AddPlayer() {
     formState: { errors },
   } = useForm();
 
+  const check = <span>&#10003;</span>;
+
   const [success, setSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState(false);
   const [backendResult, setBackendResult] = useState(null);
   const [localList, setLocalList] = useState(null);
+  const [whList, setWhList] = useState(null);
 
   const onSubmit = async (data) => {
     console.log("data", data);
@@ -33,7 +36,16 @@ export default function AddPlayer() {
 
     try {
       setLocalList(formula.calculation(sex, age, weight, height));
+      setWhList(formula.getWaistToHip(50, 40));
       await apiService.addPlayer(sex, age, weight, height).then((result) => {
+        console.log(result);
+        if (result.list) {
+          setBackendResult(result.list);
+          setSuccess(true);
+          setErrorMessage(false);
+        }
+      });
+      await apiService.addWaistAndHip(50, 40).then((result) => {
         console.log(result);
         if (result.list) {
           setBackendResult(result.list);
@@ -53,8 +65,6 @@ export default function AddPlayer() {
   const [isSigningIn, setIsSigningIn] = useState(false);
 
   console.log("localList", localList);
-  // console.log("localList", localList.result);
-  // console.log("success", success);
 
   return (
     <Box
@@ -151,26 +161,58 @@ export default function AddPlayer() {
               <div style={{ paddingTop: "10px" }}>
                 <div>
                   heightInFeet: {Math.floor(localList.heightInFeet / 10)} feet{" "}
-                  {localList.heightInFeet % 10} inches
+                  {localList.heightInFeet % 10} inches &#10003;
                 </div>
-                <div>heightInCentimeter: {localList.heightInCentimeter} cm</div>
-                <div>heightInMeter: {localList.heightInMeter} cm</div>
-                <br />
-                <div>age: {localList.age} years old</div>
-                <div>sex: {localList.sex}</div>
-                <br />
-                <div>weightInPound: {localList.weightInPound} pounds</div>
-                <div>weightInKg: {localList.weightInKg} kg</div>
-                <br />
-                <div>bmi: {localList.result.bmi} kg</div>
                 <div>
-                  bodyWaterWeight: {localList.result.bodyWaterWeight} kg
+                  heightInCentimeter: {localList.heightInCentimeter} cm {check}
                 </div>
-                <div>idealWeight: {localList.result.idealWeight} kg</div>
-                <div>leanBodyMass: {localList.result.leanBodyMass} kg</div>
-                {/* <div>
-                  adjustedBodyWeight: {localList.result.adjustedBodyWeight} kg
-                </div> */}
+                <div>
+                  heightInMeter: {localList.heightInMeter} cm {check}
+                </div>
+                <br />
+                <div>
+                  age: {localList.age} years old {check}
+                </div>
+                <div>
+                  sex: {localList.sex} {check}
+                </div>
+                <br />
+                <div>
+                  weightInPound: {localList.weightInPound} pounds {check}
+                </div>
+                <div>
+                  weightInKg: {localList.weightInKg} kg {check}
+                </div>
+                <br />
+                <div>
+                  bmi: {localList.result.bmi} {check}
+                </div>
+                <div>
+                  bodyWaterWeightKg: {localList.result.bodyWaterWeightKg} kg
+                  {check}
+                </div>
+                <div>
+                  bodyWaterWeightPounds:{" "}
+                  {localList.result.bodyWaterWeightPounds} lbs
+                  {check}
+                </div>
+                <div>
+                  idealWeightInKg: {localList.result.idealWeightInKg} kg {check}
+                </div>
+                <div>
+                  idealWeightInPounds: {localList.result.idealWeightInPounds}{" "}
+                  lbs {check}
+                </div>
+                <div>
+                  leanBodyMassInPounds: {localList.result.leanBodyMassInPounds}{" "}
+                  lbs {check}
+                </div>
+                <div>
+                  leanBodyMassInPounds: {localList.result.leanBodyMassInKg} kg{" "}
+                  {check}
+                </div>
+                <br />
+                <Box>Hip and Waist Ratio: {whList}</Box>
               </div>
             )}
           </Typography>

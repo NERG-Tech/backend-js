@@ -30,25 +30,31 @@ export async function getUserData({ userIdToken, userId }) {
 }
 
 export async function addPlayer(sex, age, weight, height) {
-  console.log(
-    " sex, age, weight, height  in api-service",
+  const url = `${apiUrl}/player`;
+  let obj = {
     sex,
     age,
     weight,
-    height
-  );
-
-  const url = `${apiUrl}/player`;
-  console.log(url);
+    height,
+  };
   let res;
+
   try {
-    res = await axios.post(url, {
-      sex,
-      age,
-      weight,
-      height,
-    });
+    res = await axios.post(url, obj);
     console.log(res.data);
+  } catch (error) {
+    console.error(error.data); // NOTE - use "error.response.data` (not "error")
+  }
+  return res.data;
+}
+
+export async function addWaistAndHip(waist, hip) {
+  const url = `${apiUrl}/player/wh`;
+  let obj = { waist, hip };
+  let res;
+
+  try {
+    res = await axios.post(url, obj);
   } catch (error) {
     console.error(error.data); // NOTE - use "error.response.data` (not "error")
   }

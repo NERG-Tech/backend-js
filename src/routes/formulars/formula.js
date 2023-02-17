@@ -1,44 +1,73 @@
-const genetics = require("./genetics");
-const unitchange = require("./unit-change");
+const genetics = require("./math/genetics");
+const unitchange = require("./math/unit-change");
+
+function getWaistToHip(waist, hip) {
+  return genetics.getWaistToHipRatio(waist, hip);
+}
+
+function getVo2(pulse, age) {
+  return genetics.getVo2(pulse, age);
+}
 
 function calculation(sex, age, weight, height) {
   // weight
   const weightInPound = weight;
   const weightInKg = unitchange.changePoundToKg(weight);
   sex = sex.toLowerCase();
+
   // height
   const heightInFeet = height;
   let obj = unitchange.changeFootToMeter(heightInFeet / 10);
   let heightInMeter = obj.mt;
   const heightInCentimeter = obj.cm;
 
-  console.log("heightInFeet", heightInFeet);
-  console.log("heightInMeter", heightInMeter);
-  console.log("heightInCentimeter", heightInCentimeter);
+  /* result of calculations */
 
-  // result of calculations
-  const idealWeight = genetics.getIdealBodyWeight(heightInCentimeter, sex);
-  const bodyWaterWeight = genetics.getBodyWaterWeight(
+  // ideal weight
+  const idealWeightObj = genetics.getIdealBodyWeight(heightInCentimeter, sex);
+  const idealWeightInKg = idealWeightObj.kg;
+  const idealWeightInPounds = idealWeightObj.pounds;
+
+  // body water
+  const bodyWaterWeightObj = genetics.getBodyWaterWeight(
     weightInKg,
     heightInCentimeter,
     age,
     sex
   );
+  const bodyWaterWeightInKg = bodyWaterWeightObj.kg;
+  const bodyWaterWeightInPounds = bodyWaterWeightObj.pounds;
 
+  // adjusted body weight
   const adjustedBodyWeight = genetics.getAdjustedBodyWeight(
-    idealWeight,
+    idealWeightInKg,
     weightInKg
   );
 
-  let leanBodyMass = "";
-  if (sex === "Male") {
-    leanBodyMass = genetics.getLeanBodyMassMen(weightInKg, heightInCentimeter);
-  } else {
-    leanBodyMass = genetics.getLeanBodyMassWomen(
+  // lean body mass
+  let leanBodyMassInKg = "";
+  let leanBodyMassInPounds = "";
+  if (sex === "male" || sex === "Male") {
+    leanBodyMassInKg = genetics.getLeanBodyMassMen(
       weightInKg,
       heightInCentimeter
-    );
+    ).kg;
+    leanBodyMassInPounds = genetics.getLeanBodyMassMen(
+      weightInKg,
+      heightInCentimeter
+    ).pounds;
+  } else {
+    leanBodyMassInKg = genetics.getLeanBodyMassWomen(
+      weightInKg,
+      heightInCentimeter
+    ).kg;
+    leanBodyMassInPounds = genetics.getLeanBodyMassWomen(
+      weightInKg,
+      heightInCentimeter
+    ).pounds;
   }
+
+  // bmi
   let bmi = genetics.getBMI(weightInKg, heightInMeter);
 
   const list = {
@@ -51,12 +80,16 @@ function calculation(sex, age, weight, height) {
     weightInKg: weightInKg,
     result: {
       bmi: bmi,
-      idealWeight: idealWeight,
-      bodyWaterWeight: bodyWaterWeight,
+      idealWeightInKg: idealWeightInKg,
+      idealWeightInPounds: idealWeightInPounds,
+      bodyWaterWeightKg: bodyWaterWeightInKg,
+      bodyWaterWeightPounds: bodyWaterWeightInPounds,
       adjustedBodyWeight: adjustedBodyWeight,
-      leanBodyMass: leanBodyMass,
+      leanBodyMassInKg: leanBodyMassInKg,
+      leanBodyMassInPounds: leanBodyMassInPounds,
     },
   };
   return list;
 }
-module.exports = { calculation };
+
+module.exports = { calculation, getWaistToHip, getVo2 };

@@ -12,6 +12,10 @@ function changePoundToKg(value) {
   return twoDigitDecimal(value / 2.2046);
 }
 
+function changeKgToPound(value) {
+  return twoDigitDecimal(value * 2.2046);
+}
+
 function changeFootToMeter(value) {
   let feet = Math.floor(value);
   let inches = (value * 10) % 10;
@@ -30,4 +34,5 @@ module.exports = {
   changePoundToKg,
   changeFootToMeter,
   changeCmToInches,
+  changeKgToPound,
 };
