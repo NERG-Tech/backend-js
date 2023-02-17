@@ -7,10 +7,9 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
-// import isEmail from "is-email";
-import { useNavigate } from "react-router-dom";
-// import { useAuth } from "../auth";
+
 import * as apiService from "../api-service";
+import * as formula from "./formulars/formula";
 
 export default function AddPlayer() {
   const {
@@ -22,8 +21,8 @@ export default function AddPlayer() {
 
   const [success, setSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState(false);
-  //   const navigate = useNavigate();
-  //   const { signIn } = useAuth();
+  const [backendResult, setBackendResult] = useState(null);
+  const [localList, setLocalList] = useState(null);
 
   const onSubmit = async (data) => {
     console.log("data", data);
@@ -33,12 +32,17 @@ export default function AddPlayer() {
     setErrorMessage(false);
 
     try {
+      setLocalList(formula.calculation(sex, age, weight, height));
       await apiService.addPlayer(sex, age, weight, height).then((result) => {
         console.log(result);
-        setSuccess(true);
-        setErrorMessage(false);
+        if (result.list) {
+          setBackendResult(result.list);
+          setSuccess(true);
+          setErrorMessage(false);
+        }
       });
     } catch (error) {
+      setError(error);
       setSuccess(false);
       setErrorMessage(true);
     } finally {
@@ -48,8 +52,9 @@ export default function AddPlayer() {
 
   const [isSigningIn, setIsSigningIn] = useState(false);
 
-  console.log("errorMessage", errorMessage);
-  console.log("success", success);
+  console.log("localList", localList);
+  // console.log("localList", localList.result);
+  // console.log("success", success);
 
   return (
     <Box
@@ -140,6 +145,35 @@ export default function AddPlayer() {
 
         <Box sx={{ pt: 2 }}>
           <Typography>{success && "Player is successfully added."}</Typography>
+
+          <Typography>
+            {localList && (
+              <div style={{ paddingTop: "10px" }}>
+                <div>
+                  heightInFeet: {Math.floor(localList.heightInFeet / 10)} feet{" "}
+                  {localList.heightInFeet % 10} inches
+                </div>
+                <div>heightInCentimeter: {localList.heightInCentimeter} cm</div>
+                <div>heightInMeter: {localList.heightInMeter} cm</div>
+                <br />
+                <div>age: {localList.age} years old</div>
+                <div>sex: {localList.sex}</div>
+                <br />
+                <div>weightInPound: {localList.weightInPound} pounds</div>
+                <div>weightInKg: {localList.weightInKg} kg</div>
+                <br />
+                <div>bmi: {localList.result.bmi} kg</div>
+                <div>
+                  bodyWaterWeight: {localList.result.bodyWaterWeight} kg
+                </div>
+                <div>idealWeight: {localList.result.idealWeight} kg</div>
+                <div>leanBodyMass: {localList.result.leanBodyMass} kg</div>
+                {/* <div>
+                  adjustedBodyWeight: {localList.result.adjustedBodyWeight} kg
+                </div> */}
+              </div>
+            )}
+          </Typography>
         </Box>
         <Box
           sx={{
