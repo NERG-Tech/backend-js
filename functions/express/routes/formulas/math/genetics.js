@@ -179,6 +179,11 @@ function literToML(value) {
   return value * 1000;
 }
 
+function getVo2(pulse, age) {
+  let maxHR = 208 - age * 0.7;
+  return Math.round(15.3 * (maxHR / Math.floor(pulse * 3)));
+}
+
 module.exports = {
   getBMI,
   getBmiStatus,
@@ -190,4 +195,5 @@ module.exports = {
   getAdjustedBodyWeight,
   getWaistToHipRatio,
   getBloodVolumn,
+  getVo2,
 };

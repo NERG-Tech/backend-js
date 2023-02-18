@@ -17,6 +17,7 @@ const validateEmailAndPassword = require("./express/middleware/validate-email-an
 const firebaseAuth = require("./express/middleware/firebase-auth");
 const validatePlayer = require("./express/middleware/validate-add-player");
 const validateWaistHip = require("./express/middleware/validate-waist-hip");
+const validateVo2 = require("./express/middleware/validate-vo2");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -29,10 +30,12 @@ const login = require("./express/routes/login");
 const getUser = require("./express/routes/get-user");
 const addPlayer = require("./express/routes/add-player");
 const addWaistHip = require("./express/routes/add-waist-hip");
+const getVo2 = require("./express/routes/get-vo2");
 
 const app = express();
 app.use(cors());
 app.use(morgan("dev"));
+// app.use(firebaseAuth);
 
 // listen
 app.post("/login", validateEmailAndPassword, login);
@@ -40,5 +43,6 @@ app.post("/register", validateEmailAndPassword, register);
 app.get("/users/:id", firebaseAuth, getUser);
 app.post("/player", validatePlayer, addPlayer);
 app.post("/player/wh", validateWaistHip, addWaistHip);
+app.post("/player/vo2", validateVo2, getVo2);
 
 exports.api = functions.https.onRequest(app);

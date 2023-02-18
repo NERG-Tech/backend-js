@@ -60,3 +60,16 @@ export async function addWaistAndHip(waist, hip) {
   }
   return res.data;
 }
+
+export async function getVo2(pulse) {
+  const url = `${apiUrl}/player/vo2`;
+  let obj = { pulse };
+  let res;
+
+  try {
+    res = await axios.post(url, obj);
+  } catch (error) {
+    console.error(error.data); // NOTE - use "error.response.data` (not "error")
+  }
+  return res.data;
+}

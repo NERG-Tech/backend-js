@@ -5,6 +5,10 @@ function getWaistToHip(waist, hip) {
   return genetics.getWaistToHipRatio(waist, hip);
 }
 
+function getVo2(pulse, age) {
+  return genetics.getVo2(pulse, age);
+}
+
 function calculation(sex, age, weight, height) {
   // weight
   const weightInPound = weight;
@@ -88,4 +92,4 @@ function calculation(sex, age, weight, height) {
   return list;
 }
 
-module.exports = { calculation, getWaistToHip };
+module.exports = { calculation, getWaistToHip, getVo2 };
