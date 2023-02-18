@@ -1,7 +1,8 @@
-// import { twoDigitDecimal, changeCmToInches } from "./unit-change";
-
 const unitchange = require("./unit-change");
-// BMI
+
+/**
+ * BMI
+ */
 
 function getBMI(weight, height) {
   if (isNaN(weight) || weight <= 0 || isNaN(height) || height <= 0)
@@ -27,7 +28,9 @@ function getBmiStatus(bmi) {
   }
 }
 
-// Lean Body Mass
+/**
+ * Lean Body Mass
+ */
 
 function getLeanBodyMassMen(weight, height) {
   let obj = {
@@ -55,7 +58,9 @@ function getLeanBodyMassWomen(weight, height) {
   return obj;
 }
 
-// IBW - Robin formula
+/**
+ * IBW - Robin formula
+ */
 
 function getIdealBodyWeight(heightInCentimeter, sex) {
   if (isNaN(heightInCentimeter) || heightInCentimeter <= 0)
@@ -87,7 +92,9 @@ function getIdealBodyWeight(heightInCentimeter, sex) {
   }
 }
 
-// Body Water Weight - P.E. Watson's formula
+/**
+ * Body Water Weight - P.E. Watson's formula
+ */
 
 function getBodyWaterWeight(weightInKg, heightInCentimeter, age, sex) {
   if (sex === "male") {
@@ -127,7 +134,9 @@ function getBodyWaterWeight(weightInKg, heightInCentimeter, age, sex) {
   }
 }
 
-// Adjusted Body Weight
+/**
+ * Adjusted Body Weight
+ */
 
 function getAdjustedBodyWeight(idealBodyWeight, actualBodyWeight) {
   return (
@@ -135,7 +144,9 @@ function getAdjustedBodyWeight(idealBodyWeight, actualBodyWeight) {
   );
 }
 
-// Waist to Hip Ratio
+/**
+ * Waist to Hip Ratio
+ */
 
 function getWaistToHipRatio(waist, hip) {
   if (isNaN(waist) || waist <= 0 || isNaN(hip) || hip <= 0)
@@ -144,7 +155,9 @@ function getWaistToHipRatio(waist, hip) {
   return parseFloat((waist / hip).toFixed(2));
 }
 
-// Blood Volume Calculator - Nadler's Equation
+/**
+ * Blood Volume Calculator - Nadler's Equation
+ */
 
 function getBloodVolumn(sex, weightInKg, heightInMeter) {
   if (
@@ -179,9 +192,32 @@ function literToML(value) {
   return value * 1000;
 }
 
+/**
+ * Vo2
+ */
+
 function getVo2(pulse, age) {
   let maxHR = 208 - age * 0.7;
-  return Math.round(15.3 * (maxHR / Math.floor(pulse * 3)));
+  return Math.round(15.3 * (maxHR / Math.floor(pulse * 3))) + " ml/kg/min";
+}
+
+/**
+ * RMR - Harris-Benedict Calculator
+ * https://www.omnicalculator.com/health/bmr-harris-benedict-equation
+ */
+
+function getRMR(weightInKg, heightInCentimeter, age, sex) {
+  if (sex === "male" || sex === "Male") {
+    let rmr = Math.round(
+      66.5 + 13.75 * weightInKg + 5.003 * heightInCentimeter - 6.75 * age
+    );
+    return { kg: rmr, pounds: unitchange.changeKgToPound(rmr) };
+  } else {
+    let rmr = Math.floor(
+      655.1 + 9.563 * weightInKg + 1.85 * heightInCentimeter - 4.676 * age
+    );
+    return { kg: rmr, pounds: unitchange.changeKgToPound(rmr) };
+  }
 }
 
 module.exports = {
@@ -196,4 +232,5 @@ module.exports = {
   getWaistToHipRatio,
   getBloodVolumn,
   getVo2,
+  getRMR,
 };

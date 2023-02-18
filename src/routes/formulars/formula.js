@@ -9,6 +9,10 @@ function getVo2(pulse, age) {
   return genetics.getVo2(pulse, age);
 }
 
+function getRMR(weight, height, age, sex) {
+  return genetics.getRMR(weight, height, age, sex);
+}
+
 function calculation(sex, age, weight, height) {
   // weight
   const weightInPound = weight;
@@ -67,6 +71,9 @@ function calculation(sex, age, weight, height) {
     ).pounds;
   }
 
+  // blood volumn
+  let bv = genetics.getBloodVolumn(sex, weightInKg, heightInMeter);
+
   // bmi
   let bmi = genetics.getBMI(weightInKg, heightInMeter);
 
@@ -87,9 +94,10 @@ function calculation(sex, age, weight, height) {
       adjustedBodyWeight: adjustedBodyWeight,
       leanBodyMassInKg: leanBodyMassInKg,
       leanBodyMassInPounds: leanBodyMassInPounds,
+      bloodVolumn: bv,
     },
   };
   return list;
 }
 
-module.exports = { calculation, getWaistToHip, getVo2 };
+module.exports = { calculation, getWaistToHip, getVo2, getRMR };

@@ -47,7 +47,9 @@ function calculation(sex, age, weight, height) {
   // lean body mass
   let leanBodyMassInKg = "";
   let leanBodyMassInPounds = "";
+
   if (sex === "male" || sex === "Male") {
+    // lean body mass
     leanBodyMassInKg = genetics.getLeanBodyMassMen(
       weightInKg,
       heightInCentimeter
@@ -57,6 +59,7 @@ function calculation(sex, age, weight, height) {
       heightInCentimeter
     ).pounds;
   } else {
+    // lean body mass
     leanBodyMassInKg = genetics.getLeanBodyMassWomen(
       weightInKg,
       heightInCentimeter
@@ -66,6 +69,13 @@ function calculation(sex, age, weight, height) {
       heightInCentimeter
     ).pounds;
   }
+
+  // RMR
+  let rmrInKg = genetics.getRMR(weight, height, age, sex).kg;
+  let rmrInPounds = genetics.getRMR(weight, height, age, sex).pounds;
+
+  // blood volumn
+  let bv = genetics.getBloodVolumn(sex, weightInKg, heightInMeter);
 
   // bmi
   let bmi = genetics.getBMI(weightInKg, heightInMeter);
@@ -87,6 +97,9 @@ function calculation(sex, age, weight, height) {
       adjustedBodyWeight: adjustedBodyWeight,
       leanBodyMassInKg: leanBodyMassInKg,
       leanBodyMassInPounds: leanBodyMassInPounds,
+      rmrInKg: rmrInKg,
+      rmrInPounds: rmrInPounds,
+      bloodVolumn: bv,
     },
   };
   return list;

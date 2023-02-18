@@ -27,6 +27,8 @@ export default function AddPlayer() {
   const [localList, setLocalList] = useState(null);
   const [whList, setWhList] = useState(null);
   const [vo2, setVo2] = useState(null);
+  const [rmr, setRmr] = useState(null);
+
   console.log("vo2", vo2);
 
   const onSubmit = async (data) => {
@@ -37,9 +39,13 @@ export default function AddPlayer() {
     setErrorMessage(false);
 
     try {
+      let list = formula.calculation(sex, age, weight, height);
       setLocalList(formula.calculation(sex, age, weight, height));
       setWhList(formula.getWaistToHip(50, 40));
-      setVo2(formula.getVo2(100, age));
+      setVo2(formula.getVo2(120, age));
+      setRmr(
+        formula.getRMR(list.weightInKg, list.heightInCentimeter, age, sex)
+      );
 
       await apiService.addPlayer(sex, age, weight, height).then((result) => {
         console.log(result);
@@ -57,7 +63,7 @@ export default function AddPlayer() {
           setErrorMessage(false);
         }
       });
-      await apiService.getVo2(100).then((result) => {
+      await apiService.getVo2(120).then((result) => {
         console.log(result);
         if (result.list) {
           setBackendResult(result.list);
@@ -226,6 +232,8 @@ export default function AddPlayer() {
                 <br />
                 <Box>Hip and Waist Ratio: {whList}</Box>
                 <Box>100 beats / 20 sec = Vo2: {vo2}</Box>
+                <Box>RMR: {rmr} kcal / day</Box>
+                <Box>Blood Volumn: {localList.result.bloodVolumn} ml</Box>
               </div>
             )}
           </Typography>
