@@ -19,10 +19,10 @@ export default function AddPlayer() {
    */
   const { user, loading } = useAuth();
   const [dataState, setDataState] = useState(undefined);
-  const [token, setToken] = useState(null);
+
   const secureNoteRef = useRef(undefined);
 
-  console.log(user);
+  // console.log(user);
 
   useEffect(() => {
     (async () => {
@@ -30,8 +30,14 @@ export default function AddPlayer() {
         if (user) {
           setDataState("loading");
           const userIdToken = await user.getIdToken();
-          setToken(userIdToken);
-          // console.log("userIdToken", userIdToken);
+
+          await apiService
+            .validateUser({ userIdToken })
+            .then((result) => console.log("Validate User", result))
+            .catch((err) => {
+              console.log("Validate User Err", err);
+            });
+
           try {
             const { secureNote } = await apiService.getUserData({
               userIdToken,
@@ -46,10 +52,6 @@ export default function AddPlayer() {
       }
     })();
   }, [user, loading]);
-
-  useEffect(() => {
-    console.log("token", token);
-  }, [token]);
 
   /**
    * Form
@@ -92,7 +94,7 @@ export default function AddPlayer() {
   let position = "Defense";
 
   const onSubmit = async (data) => {
-    console.log("data", data);
+    // console.log("data", data);
     const { weight, height, age, sex } = data;
     setSuccess(false);
     setIsSigningIn(true);
@@ -112,28 +114,28 @@ export default function AddPlayer() {
       await apiService
         .addPlayer(sex, age, weight, height, name, sport, position)
         .then((result) => {
-          console.log(result);
+          // console.log(result);
           if (result.list) {
             setSuccess(true);
             setErrorMessage(false);
           }
         });
       await apiService.addWaistAndHip(50, 40).then((result) => {
-        console.log(result);
+        // console.log(result);
         if (result.list) {
           setSuccess(true);
           setErrorMessage(false);
         }
       });
       await apiService.getVo2(120).then((result) => {
-        console.log(result);
+        // console.log(result);
         if (result.list) {
           setSuccess(true);
           setErrorMessage(false);
         }
       });
       await apiService.getMET(minutes, seconds).then((result) => {
-        console.log(result);
+        // console.log(result);
         if (result.list) {
           setSuccess(true);
           setErrorMessage(false);
@@ -149,7 +151,7 @@ export default function AddPlayer() {
           waistCircumference
         )
         .then((result) => {
-          console.log(result);
+          // console.log(result);
           if (result.list) {
             setSuccess(true);
             setErrorMessage(false);
@@ -166,7 +168,7 @@ export default function AddPlayer() {
 
   const [isSigningIn, setIsSigningIn] = useState(false);
 
-  console.log("localList", localList);
+  // console.log("localList", localList);
 
   return (
     <>

@@ -67,7 +67,7 @@ function getIdealBodyWeight(heightInCentimeter, sex) {
     throw new Error("Parameter is not valid!");
 
   let heightInInch = unitchange.changeCmToInches(heightInCentimeter); // 66
-  console.log("idealBodyWeight heightInInch", heightInInch);
+  // console.log("idealBodyWeight heightInInch", heightInInch);
 
   if (heightInCentimeter <= 153) {
     return parseFloat(
@@ -237,7 +237,7 @@ function getRMR(weightInKg, heightInCentimeter, age, sex) {
 
 function getMET(sex, minutes, seconds) {
   let T = minutes + seconds * 0.0165;
-  console.log("T", T);
+  // console.log("T", T);
   if (sex === "male" || sex === "Male") {
     return (
       (14.8 - 1.379 * T + 0.451 * Math.pow(T, 2) - 0.012 * Math.pow(T, 3)) /

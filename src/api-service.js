@@ -18,6 +18,18 @@ export async function signUp({ email, password, secureNote }) {
   });
   return res.data;
 }
+//validateUser
+export async function validateUser({ userIdToken }) {
+  console.log("userIdToken in validate user", userIdToken);
+
+  const url = `${apiUrl}/validateUser/`;
+  const res = await axios.get(url, {
+    headers: {
+      Authorization: `Bearer ${userIdToken}`,
+    },
+  });
+  return res.data;
+}
 
 export async function getUserData({ userIdToken, userId }) {
   const url = `${apiUrl}/users/${userId}`;
@@ -52,7 +64,7 @@ export async function addPlayer(
 
   try {
     res = await axios.post(url, obj);
-    console.log(res.data);
+    // console.log(res.data);
   } catch (error) {
     console.error(error.data); // NOTE - use "error.response.data` (not "error")
   }
