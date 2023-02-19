@@ -223,7 +223,7 @@ function getRMR(weightInKg, heightInCentimeter, age, sex) {
     //   66.5 + 13.75 * weightInKg + 5.003 * heightInCentimeter - 6.75 * age
     // );
     return unitchange.removeDecimal(
-      10 * weightInKg + 6.25 * heightInCentimeter - 5 * age + 5
+      10 * weightInKg + 6.25 * heightInCentimeter - age * 5 + 5
     );
   } else {
     // return Math.floor(

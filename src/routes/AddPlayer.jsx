@@ -22,7 +22,7 @@ export default function AddPlayer() {
 
   const secureNoteRef = useRef(undefined);
 
-  // console.log(user);
+  console.log("user", user);
 
   useEffect(() => {
     (async () => {
@@ -30,9 +30,28 @@ export default function AddPlayer() {
         if (user) {
           setDataState("loading");
           const userIdToken = await user.getIdToken();
+          console.log("userIdToken", userIdToken);
 
           await apiService
             .validateUser({ userIdToken })
+            .then((result) => console.log("Validate User", result))
+            .catch((err) => {
+              console.log("Validate User Err", err);
+            });
+
+          try {
+            const { secureNote } = await apiService.getUserData({
+              userIdToken,
+              userId: user.uid,
+            });
+            secureNoteRef.current = secureNote;
+            setDataState("success");
+          } catch {
+            setDataState("error");
+          }
+
+          await apiService
+            .revokeToken(user.uid)
             .then((result) => console.log("Validate User", result))
             .catch((err) => {
               console.log("Validate User Err", err);
@@ -52,6 +71,10 @@ export default function AddPlayer() {
       }
     })();
   }, [user, loading]);
+
+  const signout = async () => {
+    await apiService.signout(user.uid);
+  };
 
   /**
    * Form
@@ -357,6 +380,7 @@ export default function AddPlayer() {
               </Typography>
             </Box>
           </form>
+          <Button onClick={signout}>Signout</Button>
         </Box>
       ) : (
         <div>

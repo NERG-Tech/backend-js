@@ -39,6 +39,7 @@ const addKeyMeasurements = require("./express/routes/add-key-measurements");
 const addGeneticHealth = require("./express/routes/add-genetic-health");
 const signout = require("./express/routes/signout");
 const validateUserToken = require("./express/routes/validate-user-token");
+const removeToken = require("./express/routes/revoke-token");
 
 const app = express();
 app.use(cors());
@@ -46,8 +47,9 @@ app.use(morgan("dev"));
 
 // listen
 app.get("/users/:id", firebaseAuth, getUser);
-app.get("/validateUser", validateUserToken);
-app.post("/signout/:id", signout);
+app.post("/user/revoke/:uid", removeToken);
+app.get("/user/validate", validateUserToken);
+app.post("/signout", signout);
 app.post("/login", validateEmailAndPassword, login);
 app.post("/register", validateEmailAndPassword, register);
 app.post("/player", validatePlayer, addPlayer);

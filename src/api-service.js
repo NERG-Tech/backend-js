@@ -18,15 +18,21 @@ export async function signUp({ email, password, secureNote }) {
   });
   return res.data;
 }
-//validateUser
+// validateUser
 export async function validateUser({ userIdToken }) {
-  console.log("userIdToken in validate user", userIdToken);
-
-  const url = `${apiUrl}/validateUser/`;
+  const url = `${apiUrl}/user/validate/`;
   const res = await axios.get(url, {
     headers: {
       Authorization: `Bearer ${userIdToken}`,
     },
+  });
+  return res.data;
+}
+
+export async function revokeToken(uid) {
+  const url = `${apiUrl}/user/revoke/${uid}`;
+  const res = await axios.post(url, {
+    uid: uid,
   });
   return res.data;
 }
@@ -41,6 +47,13 @@ export async function getUserData({ userIdToken, userId }) {
   return res.data;
 }
 
+export async function signout(userId) {
+  console.log("userId", userId);
+
+  const url = `${apiUrl}/signout/${userId}`;
+  const res = await axios.post(url);
+  return res.data;
+}
 export async function addPlayer(
   sex,
   age,
