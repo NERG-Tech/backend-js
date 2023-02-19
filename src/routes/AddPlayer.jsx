@@ -11,6 +11,7 @@ import { useForm, Controller } from "react-hook-form";
 import { useAuth } from "../auth";
 import * as apiService from "../api-service";
 import * as formula from "./formula/formula";
+import { Link } from "react-router-dom";
 
 export default function AddPlayer() {
   /**
@@ -50,30 +51,32 @@ export default function AddPlayer() {
             setDataState("error");
           }
 
-          await apiService
-            .revokeToken(user.uid)
-            .then((result) => console.log("Validate User", result))
-            .catch((err) => {
-              console.log("Validate User Err", err);
-            });
+          // Token Revoke
+          // await apiService
+          //   .revokeToken(user.uid)
+          //   .then((result) => console.log("Validate User", result))
+          //   .catch((err) => {
+          //     console.log("Validate User Err", err);
+          //   });
 
-          try {
-            const { secureNote } = await apiService.getUserData({
-              userIdToken,
-              userId: user.uid,
-            });
-            secureNoteRef.current = secureNote;
-            setDataState("success");
-          } catch {
-            setDataState("error");
-          }
+          // try {
+          //   const { secureNote } = await apiService.getUserData({
+          //     userIdToken,
+          //     userId: user.uid,
+          //   });
+          //   secureNoteRef.current = secureNote;
+          //   setDataState("success");
+          // } catch {
+          //   setDataState("error");
+          // }
         }
       }
     })();
   }, [user, loading]);
 
   const signout = async () => {
-    await apiService.signout(user.uid);
+    await apiService.revokeToken(user.uid);
+    window.location.reload(false);
   };
 
   /**
@@ -212,6 +215,7 @@ export default function AddPlayer() {
             justifyContent: "center",
             alignItems: "center",
             height: "100%",
+            flexDirection: "column",
           }}
         >
           <form
@@ -383,9 +387,20 @@ export default function AddPlayer() {
           <Button onClick={signout}>Signout</Button>
         </Box>
       ) : (
-        <div>
-          Please login to add data
-          <div>Go back to index page</div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            flexDirection: "column",
+            alignItems: "center",
+            paddingTop: "30px",
+            lineHeight: "190%",
+          }}
+        >
+          <div>Please login to add data</div>
+          <Button LinkComponent={Link} to="/">
+            Go back to index page
+          </Button>
         </div>
       )}
     </>
