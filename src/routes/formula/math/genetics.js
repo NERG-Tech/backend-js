@@ -209,7 +209,7 @@ function literToML(value) {
 
 function getVo2(pulse, age) {
   let maxHR = 208 - age * 0.7;
-  return Math.round(15.3 * (maxHR / Math.floor(pulse * 3))) + " ml/kg/min";
+  return Math.round(15.3 * (maxHR / Math.floor(pulse * 3)));
 }
 
 /**

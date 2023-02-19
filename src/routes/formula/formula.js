@@ -9,10 +9,6 @@ function getVo2(pulse, age) {
   return genetics.getVo2(pulse, age);
 }
 
-function getRMR(weight, height, age, sex) {
-  return genetics.getRMR(weight, height, age, sex);
-}
-
 function getMET(sex, minutes, seconds) {
   return genetics.getMET(sex, minutes, seconds);
 }
@@ -25,6 +21,7 @@ function calculation(sex, age, weight, height) {
 
   // height
   const heightInFeet = height;
+
   let obj = unitchange.changeFootToMeter(heightInFeet / 10);
   let heightInMeter = obj.mt;
   const heightInCentimeter = obj.cm;
@@ -46,7 +43,6 @@ function calculation(sex, age, weight, height) {
   const bodyWaterWeightInKg = bodyWaterWeightObj.kg;
   const bodyWaterWeightInPounds = bodyWaterWeightObj.pounds;
 
-  console.log("idealWeightInKg, weightInKg", idealWeightInKg, weightInKg);
   // adjusted body weight
   const ajbw = genetics.getAdjustedBodyWeight(idealWeightInKg, weightInKg);
   const adjustedBodyWeightInKg = ajbw.kg;
@@ -81,28 +77,42 @@ function calculation(sex, age, weight, height) {
   // bmi
   let bmi = genetics.getBMI(weightInKg, heightInMeter);
 
+  // RMR
+  let rmr = genetics.getRMR(weightInKg, heightInCentimeter, age, sex);
+
   const list = {
     sex: sex,
     age: age,
-    heightInFeet: heightInFeet,
-    heightInMeter: heightInMeter,
-    heightInCentimeter: heightInCentimeter,
-    weightInPound: weightInPound,
-    weightInKg: weightInKg,
-    result: {
-      bmi: bmi,
-      idealWeightInKg: idealWeightInKg,
-      idealWeightInPounds: idealWeightInPounds,
-      bodyWaterWeightKg: bodyWaterWeightInKg,
-      bodyWaterWeightPounds: bodyWaterWeightInPounds,
-      adjustedBodyWeightInKg: adjustedBodyWeightInKg,
-      adjustedBodyWeightInPounds: adjustedBodyWeightInPounds,
-      leanBodyMassInKg: leanBodyMassInKg,
-      leanBodyMassInPounds: leanBodyMassInPounds,
-      bloodVolumn: bv,
+    weight: { kg: parseFloat(weightInKg), pounds: parseFloat(weightInPound) },
+    height: {
+      mt: parseFloat(heightInMeter),
+      feet: {
+        feet: Math.floor(parseFloat(heightInFeet) / 10),
+        inch: parseFloat(heightInFeet) % 10,
+      },
+      cm: parseFloat(heightInCentimeter),
     },
+    bmi: parseFloat(bmi),
+    idealWeight: {
+      kg: parseFloat(idealWeightInKg),
+      pounds: parseFloat(idealWeightInPounds),
+    },
+    bodyWaterWeight: {
+      kg: parseFloat(bodyWaterWeightInKg),
+      pounds: parseFloat(bodyWaterWeightInPounds),
+    },
+    adjustedBodyWeight: {
+      kg: parseFloat(adjustedBodyWeightInKg),
+      pounds: parseFloat(adjustedBodyWeightInPounds),
+    },
+    leanBodyMass: {
+      kg: parseFloat(leanBodyMassInKg),
+      pounds: parseFloat(leanBodyMassInPounds),
+    },
+    bloodVolumn: { value: parseFloat(bv), unit: "ml" },
+    rmr: { value: parseFloat(rmr), unit: "kcal / day" },
   };
   return list;
 }
 
-module.exports = { calculation, getWaistToHip, getVo2, getRMR, getMET };
+module.exports = { calculation, getWaistToHip, getVo2, getMET };

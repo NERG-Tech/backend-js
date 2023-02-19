@@ -73,3 +73,16 @@ export async function getVo2(pulse) {
   }
   return res.data;
 }
+
+export async function getMET(minutes, seconds) {
+  const url = `${apiUrl}/player/met`;
+  let obj = { minutes, seconds };
+  let res;
+
+  try {
+    res = await axios.post(url, obj);
+  } catch (error) {
+    console.error(error.data); // NOTE - use "error.response.data` (not "error")
+  }
+  return res.data;
+}

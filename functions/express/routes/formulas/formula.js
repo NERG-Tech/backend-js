@@ -21,6 +21,7 @@ function calculation(sex, age, weight, height) {
 
   // height
   const heightInFeet = height;
+
   let obj = unitchange.changeFootToMeter(heightInFeet / 10);
   let heightInMeter = obj.mt;
   const heightInCentimeter = obj.cm;
@@ -77,26 +78,39 @@ function calculation(sex, age, weight, height) {
   let bmi = genetics.getBMI(weightInKg, heightInMeter);
 
   // RMR
-  let rmr = genetics.getRMR(weight, height, age, sex);
+  let rmr = genetics.getRMR(weightInKg, heightInCentimeter, age, sex);
 
   const list = {
     sex: sex,
     age: age,
-    weight: { kg: weightInKg, pounds: weightInPound },
-    height: { mt: heightInMeter, feet: heightInFeet, cm: heightInCentimeter },
-    bmi: bmi,
-    idealWeight: { kg: idealWeightInKg, pounds: idealWeightInPounds },
+    weight: { kg: parseFloat(weightInKg), pounds: parseFloat(weightInPound) },
+    height: {
+      mt: parseFloat(heightInMeter),
+      feet: {
+        feet: Math.floor(parseFloat(heightInFeet) / 10),
+        inch: parseFloat(heightInFeet) % 10,
+      },
+      cm: parseFloat(heightInCentimeter),
+    },
+    bmi: parseFloat(bmi),
+    idealWeight: {
+      kg: parseFloat(idealWeightInKg),
+      pounds: parseFloat(idealWeightInPounds),
+    },
     bodyWaterWeight: {
-      kg: bodyWaterWeightInKg,
-      pounds: bodyWaterWeightInPounds,
+      kg: parseFloat(bodyWaterWeightInKg),
+      pounds: parseFloat(bodyWaterWeightInPounds),
     },
     adjustedBodyWeight: {
-      kg: adjustedBodyWeightInKg,
-      pounds: adjustedBodyWeightInPounds,
+      kg: parseFloat(adjustedBodyWeightInKg),
+      pounds: parseFloat(adjustedBodyWeightInPounds),
     },
-    leanBodyMass: { kg: leanBodyMassInKg, pounds: leanBodyMassInPounds },
-    bloodVolumn: { value: bv, unit: "ml" },
-    rmr: { value: rmr, unit: "kcal / day" },
+    leanBodyMass: {
+      kg: parseFloat(leanBodyMassInKg),
+      pounds: parseFloat(leanBodyMassInPounds),
+    },
+    bloodVolumn: { value: parseFloat(bv), unit: "ml" },
+    rmr: { value: parseFloat(rmr), unit: "kcal / day" },
   };
   return list;
 }

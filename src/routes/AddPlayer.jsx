@@ -9,7 +9,7 @@ import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 
 import * as apiService from "../api-service";
-import * as formula from "./formulars/formula";
+import * as formula from "./formula/formula";
 
 export default function AddPlayer() {
   const {
@@ -25,12 +25,18 @@ export default function AddPlayer() {
   const [errorMessage, setErrorMessage] = useState(false);
   const [backendResult, setBackendResult] = useState(null);
   const [localList, setLocalList] = useState(null);
+  //
   const [whList, setWhList] = useState(null);
   const [vo2, setVo2] = useState(null);
-  const [rmr, setRmr] = useState(null);
   const [met, setMet] = useState(null);
 
-  console.log("vo2", vo2);
+  let waist = 50;
+  let hip = 40;
+
+  let beats = 200;
+
+  let minutes = 2;
+  let seconds = 20;
 
   const onSubmit = async (data) => {
     console.log("data", data);
@@ -40,16 +46,13 @@ export default function AddPlayer() {
     setErrorMessage(false);
 
     try {
-      let list = formula.calculation(sex, age, weight, height);
       setLocalList(formula.calculation(sex, age, weight, height));
-      setWhList(formula.getWaistToHip(50, 40));
-      let vo2 = formula.getVo2(120, age);
+
+      setWhList(formula.getWaistToHip(waist, hip));
+      let vo2 = formula.getVo2(beats, age);
       setVo2(vo2);
 
-      setRmr(
-        formula.getRMR(list.weightInKg, list.heightInCentimeter, age, sex)
-      );
-      setMet(formula.getMET(sex, 2, 20));
+      setMet(formula.getMET(sex, minutes, seconds));
 
       await apiService.addPlayer(sex, age, weight, height).then((result) => {
         console.log(result);
@@ -68,6 +71,14 @@ export default function AddPlayer() {
         }
       });
       await apiService.getVo2(120).then((result) => {
+        console.log(result);
+        if (result.list) {
+          setBackendResult(result.list);
+          setSuccess(true);
+          setErrorMessage(false);
+        }
+      });
+      await apiService.getMET(minutes, seconds).then((result) => {
         console.log(result);
         if (result.list) {
           setBackendResult(result.list);
@@ -180,74 +191,58 @@ export default function AddPlayer() {
 
           <Typography>
             {localList && (
-              <div style={{ paddingTop: "10px" }}>
+              <div style={{ paddingTop: "10px", lineHeight: "210%" }}>
+                <div>Age: {localList.age}</div>
+                <div>bmi: {localList.bmi}</div>
+                <div>sex: {localList.sex}</div>
+                <hr />
+                <div>height: {localList.height.cm} cm</div>
                 <div>
-                  heightInFeet: {Math.floor(localList.heightInFeet / 10)} feet{" "}
-                  {localList.heightInFeet % 10} inches &#10003;
+                  height: {localList.height.feet.feet} feet{" "}
+                  {localList.height.feet.inch} inch
+                </div>
+                <hr />
+                <div>weight: {localList.weight.kg} kg</div>
+                <div>weight: {localList.weight.pounds} pounds</div>
+                <hr />
+                <div>
+                  adjustedBodyWeight: {localList.adjustedBodyWeight.kg} kg
                 </div>
                 <div>
-                  heightInCentimeter: {localList.heightInCentimeter} cm {check}
+                  adjustedBodyWeight: {localList.adjustedBodyWeight.pounds}{" "}
+                  pounds
+                </div>
+                <hr />
+                <div>
+                  bloodVolumn: {localList.bloodVolumn.value}{" "}
+                  {localList.bloodVolumn.unit}
+                </div>
+                <hr />
+                <div>bodyWaterWeight: {localList.bodyWaterWeight.kg} kg</div>
+                <div>
+                  bodyWaterWeight: {localList.bodyWaterWeight.pounds} pounds
+                </div>
+                <hr />
+                <div>idealWeight: {localList.idealWeight.kg} kg</div>
+                <div>idealWeight: {localList.idealWeight.pounds} pounds</div>
+                <hr />
+                <div>leanBodyMass: {localList.leanBodyMass.kg} kg</div>
+                <div>leanBodyMass: {localList.leanBodyMass.pounds} pounds</div>
+                <hr />
+                <div>
+                  RMR: {localList.rmr.value} {localList.rmr.unit}
+                </div>
+                <hr />
+                <div>
+                  Waist Hip List: {whList} ** with waist: {waist}, hip: {hip}
+                </div>
+                <hr />
+                <div>
+                  Vo2 Max: {vo2} ml/kg/min ** with beats: {beats} per 20 seconds
                 </div>
                 <div>
-                  heightInMeter: {localList.heightInMeter} cm {check}
+                  MET: {met} METs ** with {minutes} minutes {seconds} seconds
                 </div>
-                <br />
-                <div>
-                  age: {localList.age} years old {check}
-                </div>
-                <div>
-                  sex: {localList.sex} {check}
-                </div>
-                <br />
-                <div>
-                  weightInPound: {localList.weightInPound} pounds {check}
-                </div>
-                <div>
-                  weightInKg: {localList.weightInKg} kg {check}
-                </div>
-                <br />
-                <div>
-                  bmi: {localList.result.bmi} {check}
-                </div>
-                <div>
-                  bodyWaterWeightKg: {localList.result.bodyWaterWeightKg} kg
-                  {check}
-                </div>
-                <div>
-                  bodyWaterWeightPounds:{" "}
-                  {localList.result.bodyWaterWeightPounds} lbs
-                  {check}
-                </div>
-                <div>
-                  idealWeightInKg: {localList.result.idealWeightInKg} kg {check}
-                </div>
-                <div>
-                  idealWeightInPounds: {localList.result.idealWeightInPounds}{" "}
-                  lbs {check}
-                </div>
-                <div>
-                  leanBodyMassInPounds: {localList.result.leanBodyMassInPounds}{" "}
-                  lbs {check}
-                </div>
-                <div>
-                  leanBodyMassInPounds: {localList.result.leanBodyMassInKg} kg{" "}
-                  {check}
-                </div>
-                <br />
-                <div>
-                  adjustedBodyWeightInKg:{" "}
-                  {localList.result.adjustedBodyWeightInKg} kg {check}
-                </div>
-                <div>
-                  adjustedBodyWeightInPounds:{" "}
-                  {localList.result.adjustedBodyWeightInPounds} lbs {check}
-                </div>
-                <br />
-                <Box>Hip and Waist Ratio: {whList}</Box>
-                <Box>100 beats / 20 sec = Vo2: {vo2}</Box>
-                <Box>RMR: {rmr} kcal / day</Box>
-                <Box>Blood Volumn: {localList.result.bloodVolumn} ml</Box>
-                <Box>MET: {met}</Box>
               </div>
             )}
           </Typography>

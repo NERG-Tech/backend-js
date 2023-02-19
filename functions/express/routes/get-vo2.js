@@ -1,7 +1,7 @@
 const formula = require("./formulas/formula");
 const firestore = require("firebase-admin").firestore();
 
-async function validateVo2(req, res) {
+async function getVo2(req, res) {
   // weight is in pound & height is in feet
   const { pulse } = req.body;
 
@@ -36,4 +36,4 @@ async function validateVo2(req, res) {
   });
 }
 
-module.exports = validateVo2;
+module.exports = getVo2;
