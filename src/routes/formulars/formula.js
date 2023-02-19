@@ -13,6 +13,10 @@ function getRMR(weight, height, age, sex) {
   return genetics.getRMR(weight, height, age, sex);
 }
 
+function getMET(sex, minutes, seconds) {
+  return genetics.getMET(sex, minutes, seconds);
+}
+
 function calculation(sex, age, weight, height) {
   // weight
   const weightInPound = weight;
@@ -42,11 +46,11 @@ function calculation(sex, age, weight, height) {
   const bodyWaterWeightInKg = bodyWaterWeightObj.kg;
   const bodyWaterWeightInPounds = bodyWaterWeightObj.pounds;
 
+  console.log("idealWeightInKg, weightInKg", idealWeightInKg, weightInKg);
   // adjusted body weight
-  const adjustedBodyWeight = genetics.getAdjustedBodyWeight(
-    idealWeightInKg,
-    weightInKg
-  );
+  const ajbw = genetics.getAdjustedBodyWeight(idealWeightInKg, weightInKg);
+  const adjustedBodyWeightInKg = ajbw.kg;
+  const adjustedBodyWeightInPounds = ajbw.pounds;
 
   // lean body mass
   let leanBodyMassInKg = "";
@@ -91,7 +95,8 @@ function calculation(sex, age, weight, height) {
       idealWeightInPounds: idealWeightInPounds,
       bodyWaterWeightKg: bodyWaterWeightInKg,
       bodyWaterWeightPounds: bodyWaterWeightInPounds,
-      adjustedBodyWeight: adjustedBodyWeight,
+      adjustedBodyWeightInKg: adjustedBodyWeightInKg,
+      adjustedBodyWeightInPounds: adjustedBodyWeightInPounds,
       leanBodyMassInKg: leanBodyMassInKg,
       leanBodyMassInPounds: leanBodyMassInPounds,
       bloodVolumn: bv,
@@ -100,4 +105,4 @@ function calculation(sex, age, weight, height) {
   return list;
 }
 
-module.exports = { calculation, getWaistToHip, getVo2, getRMR };
+module.exports = { calculation, getWaistToHip, getVo2, getRMR, getMET };

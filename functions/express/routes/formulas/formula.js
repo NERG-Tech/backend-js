@@ -9,6 +9,10 @@ function getVo2(pulse, age) {
   return genetics.getVo2(pulse, age);
 }
 
+function getMET(sex, minutes, seconds) {
+  return genetics.getMET(sex, minutes, seconds);
+}
+
 function calculation(sex, age, weight, height) {
   // weight
   const weightInPound = weight;
@@ -39,17 +43,14 @@ function calculation(sex, age, weight, height) {
   const bodyWaterWeightInPounds = bodyWaterWeightObj.pounds;
 
   // adjusted body weight
-  const adjustedBodyWeight = genetics.getAdjustedBodyWeight(
-    idealWeightInKg,
-    weightInKg
-  );
+  const ajbw = genetics.getAdjustedBodyWeight(idealWeightInKg, weightInKg);
+  const adjustedBodyWeightInKg = ajbw.kg;
+  const adjustedBodyWeightInPounds = ajbw.pounds;
 
   // lean body mass
   let leanBodyMassInKg = "";
   let leanBodyMassInPounds = "";
-
   if (sex === "male" || sex === "Male") {
-    // lean body mass
     leanBodyMassInKg = genetics.getLeanBodyMassMen(
       weightInKg,
       heightInCentimeter
@@ -59,7 +60,6 @@ function calculation(sex, age, weight, height) {
       heightInCentimeter
     ).pounds;
   } else {
-    // lean body mass
     leanBodyMassInKg = genetics.getLeanBodyMassWomen(
       weightInKg,
       heightInCentimeter
@@ -70,39 +70,35 @@ function calculation(sex, age, weight, height) {
     ).pounds;
   }
 
-  // RMR
-  let rmrInKg = genetics.getRMR(weight, height, age, sex).kg;
-  let rmrInPounds = genetics.getRMR(weight, height, age, sex).pounds;
-
   // blood volumn
   let bv = genetics.getBloodVolumn(sex, weightInKg, heightInMeter);
 
   // bmi
   let bmi = genetics.getBMI(weightInKg, heightInMeter);
 
+  // RMR
+  let rmr = genetics.getRMR(weight, height, age, sex);
+
   const list = {
     sex: sex,
     age: age,
-    heightInFeet: heightInFeet,
-    heightInMeter: heightInMeter,
-    heightInCentimeter: heightInCentimeter,
-    weightInPound: weightInPound,
-    weightInKg: weightInKg,
-    result: {
-      bmi: bmi,
-      idealWeightInKg: idealWeightInKg,
-      idealWeightInPounds: idealWeightInPounds,
-      bodyWaterWeightKg: bodyWaterWeightInKg,
-      bodyWaterWeightPounds: bodyWaterWeightInPounds,
-      adjustedBodyWeight: adjustedBodyWeight,
-      leanBodyMassInKg: leanBodyMassInKg,
-      leanBodyMassInPounds: leanBodyMassInPounds,
-      rmrInKg: rmrInKg,
-      rmrInPounds: rmrInPounds,
-      bloodVolumn: bv,
+    weight: { kg: weightInKg, pounds: weightInPound },
+    height: { mt: heightInMeter, feet: heightInFeet, cm: heightInCentimeter },
+    bmi: bmi,
+    idealWeight: { kg: idealWeightInKg, pounds: idealWeightInPounds },
+    bodyWaterWeight: {
+      kg: bodyWaterWeightInKg,
+      pounds: bodyWaterWeightInPounds,
     },
+    adjustedBodyWeight: {
+      kg: adjustedBodyWeightInKg,
+      pounds: adjustedBodyWeightInPounds,
+    },
+    leanBodyMass: { kg: leanBodyMassInKg, pounds: leanBodyMassInPounds },
+    bloodVolumn: { value: bv, unit: "ml" },
+    rmr: { value: rmr, unit: "kcal / day" },
   };
   return list;
 }
 
-module.exports = { calculation, getWaistToHip, getVo2 };
+module.exports = { calculation, getWaistToHip, getVo2, getMET };

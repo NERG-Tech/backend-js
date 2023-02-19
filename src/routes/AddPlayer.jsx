@@ -28,6 +28,7 @@ export default function AddPlayer() {
   const [whList, setWhList] = useState(null);
   const [vo2, setVo2] = useState(null);
   const [rmr, setRmr] = useState(null);
+  const [met, setMet] = useState(null);
 
   console.log("vo2", vo2);
 
@@ -42,10 +43,13 @@ export default function AddPlayer() {
       let list = formula.calculation(sex, age, weight, height);
       setLocalList(formula.calculation(sex, age, weight, height));
       setWhList(formula.getWaistToHip(50, 40));
-      setVo2(formula.getVo2(120, age));
+      let vo2 = formula.getVo2(120, age);
+      setVo2(vo2);
+
       setRmr(
         formula.getRMR(list.weightInKg, list.heightInCentimeter, age, sex)
       );
+      setMet(formula.getMET(sex, 2, 20));
 
       await apiService.addPlayer(sex, age, weight, height).then((result) => {
         console.log(result);
@@ -230,10 +234,20 @@ export default function AddPlayer() {
                   {check}
                 </div>
                 <br />
+                <div>
+                  adjustedBodyWeightInKg:{" "}
+                  {localList.result.adjustedBodyWeightInKg} kg {check}
+                </div>
+                <div>
+                  adjustedBodyWeightInPounds:{" "}
+                  {localList.result.adjustedBodyWeightInPounds} lbs {check}
+                </div>
+                <br />
                 <Box>Hip and Waist Ratio: {whList}</Box>
                 <Box>100 beats / 20 sec = Vo2: {vo2}</Box>
                 <Box>RMR: {rmr} kcal / day</Box>
                 <Box>Blood Volumn: {localList.result.bloodVolumn} ml</Box>
+                <Box>MET: {met}</Box>
               </div>
             )}
           </Typography>

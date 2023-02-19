@@ -2,6 +2,7 @@ const {
   getAuth: getClientAuth,
   signInWithEmailAndPassword,
 } = require("firebase/auth");
+
 const { getAuth: getAdminAuth } = require("firebase-admin/auth");
 
 async function login(req, res) {

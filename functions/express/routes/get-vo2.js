@@ -23,7 +23,7 @@ async function validateVo2(req, res) {
 
   const vo2 = formula.getVo2(parseInt(pulse), parseInt(age));
   const list = {
-    vo2: { pulse: pulse, vo2: vo2 },
+    vo2: { pulse: pulse, vo2: vo2, unit: "ml/kg/min" },
   };
 
   // start to update it into db
@@ -32,8 +32,6 @@ async function validateVo2(req, res) {
   res.status(200).json({
     result: result,
     list: list,
-    unit: "ml/kg/min",
-    age: age,
     player: playerData,
   });
 }

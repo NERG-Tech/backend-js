@@ -21,7 +21,7 @@ async function addWaistHip(req, res) {
 
   res.status(200).json({
     result: result,
-    hipAndWaistRatio: { waist: waist, hip: hip, ratio: ratio },
+    hipAndWaistRatio: { waist: waist, hip: hip, ratio: ratio, unit: "" },
   });
 }
 

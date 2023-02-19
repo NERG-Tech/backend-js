@@ -138,10 +138,21 @@ function getBodyWaterWeight(weightInKg, heightInCentimeter, age, sex) {
  * Adjusted Body Weight
  */
 
+// IBW = 60
+// ABW = 65.77
+
+// 72.65kg + 0.4 * (90kg - 72.65kg)
 function getAdjustedBodyWeight(idealBodyWeight, actualBodyWeight) {
-  return (
-    idealBodyWeight + 0.4 * (actualBodyWeight - idealBodyWeight).toFixed(0)
-  );
+  return {
+    kg: unitchange.twoDigitDecimal(
+      Math.ceil(idealBodyWeight + 0.4 * (actualBodyWeight - idealBodyWeight))
+    ),
+    pounds: unitchange.changeKgToPound(
+      unitchange.twoDigitDecimal(
+        Math.ceil(idealBodyWeight + 0.4 * (actualBodyWeight - idealBodyWeight))
+      )
+    ),
+  };
 }
 
 /**
@@ -218,6 +229,25 @@ function getRMR(weightInKg, heightInCentimeter, age, sex) {
   }
 }
 
+/**
+ * MET - Bruce Protocal METs
+ * https://www.omnicalculator.com/sports/bruce-protocol-mets
+ * time : the time you spent on running on a trademill
+ */
+
+function getMET(sex, minutes, seconds) {
+  let T = minutes + seconds * 0.0165;
+  console.log("T", T);
+  if (sex === "male" || sex === "Male") {
+    return (
+      (14.8 - 1.379 * T + 0.451 * Math.pow(T, 2) - 0.012 * Math.pow(T, 3)) /
+      3.5
+    ).toFixed(2);
+  } else {
+    return ((4.38 * T - 3.9) / 3.5).toFixed(2);
+  }
+}
+
 module.exports = {
   getBMI,
   getBmiStatus,
@@ -231,4 +261,5 @@ module.exports = {
   getBloodVolumn,
   getVo2,
   getRMR,
+  getMET,
 };
