@@ -19,6 +19,7 @@ const validatePlayer = require("./express/middleware/validate-add-player");
 const validateWaistHip = require("./express/middleware/validate-waist-hip");
 const validateVo2 = require("./express/middleware/validate-vo2");
 const validateMet = require("./express/middleware/validate-met");
+const validateKeyMeasurements = require("./express/middleware/validate-key-measurements");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -33,6 +34,7 @@ const addPlayer = require("./express/routes/add-player");
 const addWaistHip = require("./express/routes/add-waist-hip");
 const getVo2 = require("./express/routes/get-vo2");
 const getMet = require("./express/routes/get-met");
+const getKeyMeasurements = require("./express/routes/add-key-measurements");
 
 const app = express();
 app.use(cors());
@@ -47,5 +49,6 @@ app.post("/player", validatePlayer, addPlayer);
 app.post("/player/wh", validateWaistHip, addWaistHip);
 app.post("/player/vo2", validateVo2, getVo2);
 app.post("/player/met", validateMet, getMet);
+app.post("/player/key", validateKeyMeasurements, getKeyMeasurements);
 
 exports.api = functions.https.onRequest(app);

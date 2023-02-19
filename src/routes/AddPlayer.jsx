@@ -19,11 +19,8 @@ export default function AddPlayer() {
     formState: { errors },
   } = useForm();
 
-  const check = <span>&#10003;</span>;
-
   const [success, setSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState(false);
-  const [backendResult, setBackendResult] = useState(null);
   const [localList, setLocalList] = useState(null);
   //
   const [whList, setWhList] = useState(null);
@@ -35,8 +32,15 @@ export default function AddPlayer() {
 
   let beats = 200;
 
-  let minutes = 2;
+  let minutes = 20;
   let seconds = 20;
+
+  let neckCircumference = 10,
+    wingSpan = 20,
+    handSize = 30,
+    hipsCircumference = 40,
+    gluteCircumference = 50,
+    waistCircumference = 60;
 
   const onSubmit = async (data) => {
     console.log("data", data);
@@ -57,7 +61,6 @@ export default function AddPlayer() {
       await apiService.addPlayer(sex, age, weight, height).then((result) => {
         console.log(result);
         if (result.list) {
-          setBackendResult(result.list);
           setSuccess(true);
           setErrorMessage(false);
         }
@@ -65,7 +68,6 @@ export default function AddPlayer() {
       await apiService.addWaistAndHip(50, 40).then((result) => {
         console.log(result);
         if (result.list) {
-          setBackendResult(result.list);
           setSuccess(true);
           setErrorMessage(false);
         }
@@ -73,7 +75,6 @@ export default function AddPlayer() {
       await apiService.getVo2(120).then((result) => {
         console.log(result);
         if (result.list) {
-          setBackendResult(result.list);
           setSuccess(true);
           setErrorMessage(false);
         }
@@ -81,11 +82,26 @@ export default function AddPlayer() {
       await apiService.getMET(minutes, seconds).then((result) => {
         console.log(result);
         if (result.list) {
-          setBackendResult(result.list);
           setSuccess(true);
           setErrorMessage(false);
         }
       });
+      await apiService
+        .getKeyMeasurements(
+          neckCircumference,
+          wingSpan,
+          handSize,
+          hipsCircumference,
+          gluteCircumference,
+          waistCircumference
+        )
+        .then((result) => {
+          console.log(result);
+          if (result.list) {
+            setSuccess(true);
+            setErrorMessage(false);
+          }
+        });
     } catch (error) {
       setError(error);
       setSuccess(false);

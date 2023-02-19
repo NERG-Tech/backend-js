@@ -86,3 +86,30 @@ export async function getMET(minutes, seconds) {
   }
   return res.data;
 }
+
+export async function getKeyMeasurements(
+  neckCircumference,
+  wingSpan,
+  handSize,
+  hipsCircumference,
+  gluteCircumference,
+  waistCircumference
+) {
+  const url = `${apiUrl}/player/key`;
+  let obj = {
+    neckCircumference,
+    wingSpan,
+    handSize,
+    hipsCircumference,
+    gluteCircumference,
+    waistCircumference,
+  };
+  let res;
+
+  try {
+    res = await axios.post(url, obj);
+  } catch (error) {
+    console.error(error.data); // NOTE - use "error.response.data` (not "error")
+  }
+  return res.data;
+}
