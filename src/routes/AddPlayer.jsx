@@ -65,43 +65,43 @@ export default function AddPlayer() {
           setErrorMessage(false);
         }
       });
-      await apiService.addWaistAndHip(50, 40).then((result) => {
-        console.log(result);
-        if (result.list) {
-          setSuccess(true);
-          setErrorMessage(false);
-        }
-      });
-      await apiService.getVo2(120).then((result) => {
-        console.log(result);
-        if (result.list) {
-          setSuccess(true);
-          setErrorMessage(false);
-        }
-      });
-      await apiService.getMET(minutes, seconds).then((result) => {
-        console.log(result);
-        if (result.list) {
-          setSuccess(true);
-          setErrorMessage(false);
-        }
-      });
-      await apiService
-        .getKeyMeasurements(
-          neckCircumference,
-          wingSpan,
-          handSize,
-          hipsCircumference,
-          gluteCircumference,
-          waistCircumference
-        )
-        .then((result) => {
-          console.log(result);
-          if (result.list) {
-            setSuccess(true);
-            setErrorMessage(false);
-          }
-        });
+      // await apiService.addWaistAndHip(50, 40).then((result) => {
+      //   console.log(result);
+      //   if (result.list) {
+      //     setSuccess(true);
+      //     setErrorMessage(false);
+      //   }
+      // });
+      // await apiService.getVo2(120).then((result) => {
+      //   console.log(result);
+      //   if (result.list) {
+      //     setSuccess(true);
+      //     setErrorMessage(false);
+      //   }
+      // });
+      // await apiService.getMET(minutes, seconds).then((result) => {
+      //   console.log(result);
+      //   if (result.list) {
+      //     setSuccess(true);
+      //     setErrorMessage(false);
+      //   }
+      // });
+      // await apiService
+      //   .getKeyMeasurements(
+      //     neckCircumference,
+      //     wingSpan,
+      //     handSize,
+      //     hipsCircumference,
+      //     gluteCircumference,
+      //     waistCircumference
+      //   )
+      //   .then((result) => {
+      //     console.log(result);
+      //     if (result.list) {
+      //       setSuccess(true);
+      //       setErrorMessage(false);
+      //     }
+      //   });
     } catch (error) {
       setError(error);
       setSuccess(false);
