@@ -25,6 +25,21 @@ function validatePlayer(req, res, next) {
     // res.status(400).json({ error: { code: "invalid-sex-type" } });
     return;
   }
+  if (!name) {
+    res.status(500).send({ error: "no-name" });
+    // res.status(400).json({ error: { code: "no-sex-type" } });
+    return;
+  }
+  if (!sport) {
+    res.status(500).send({ error: "no-sport" });
+    // res.status(400).json({ error: { code: "no-sex-type" } });
+    return;
+  }
+  if (!position) {
+    res.status(500).send({ error: "no-position" });
+    // res.status(400).json({ error: { code: "no-sex-type" } });
+    return;
+  }
 
   next();
 }

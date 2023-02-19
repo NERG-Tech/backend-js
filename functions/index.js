@@ -21,6 +21,7 @@ const validateVo2 = require("./express/middleware/validate-vo2");
 const validateMet = require("./express/middleware/validate-met");
 const validateKeyMeasurements = require("./express/middleware/validate-key-measurements");
 const validateGeneticHealth = require("./express/middleware/validate-genetic-health");
+const validateUserToken = require("./express/middleware/validate-user-token");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -37,6 +38,7 @@ const addVo2 = require("./express/routes/add-vo2");
 const addMet = require("./express/routes/add-met");
 const addKeyMeasurements = require("./express/routes/add-key-measurements");
 const addGeneticHealth = require("./express/routes/add-genetic-health");
+const signout = require("./express/routes/signout");
 
 const app = express();
 app.use(cors());
@@ -44,6 +46,8 @@ app.use(morgan("dev"));
 
 // listen
 app.get("/users/:id", firebaseAuth, getUser);
+app.post("/userToken", validateUserToken);
+app.post("/signout/:id", signout);
 app.post("/login", validateEmailAndPassword, login);
 app.post("/register", validateEmailAndPassword, register);
 app.post("/player", validatePlayer, addPlayer);

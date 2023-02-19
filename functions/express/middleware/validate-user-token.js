@@ -1,8 +1,10 @@
 const { getAuth: getClientAuth } = require("firebase/auth");
 
 function validatePlayer(req, res, next) {
+  const { token } = req.body;
+
   getClientAuth()
-    .verifyIdToken(req.idToken)
+    .verifyIdToken(token)
     .then(() => {
       next();
     })
