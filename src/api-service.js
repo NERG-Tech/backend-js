@@ -29,13 +29,24 @@ export async function getUserData({ userIdToken, userId }) {
   return res.data;
 }
 
-export async function addPlayer(sex, age, weight, height) {
+export async function addPlayer(
+  sex,
+  age,
+  weight,
+  height,
+  name,
+  sport,
+  position
+) {
   const url = `${apiUrl}/player`;
   let obj = {
     sex,
     age,
     weight,
     height,
+    name,
+    sport,
+    position,
   };
   let res;
 

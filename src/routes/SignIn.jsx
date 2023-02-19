@@ -18,7 +18,10 @@ export default function SignIn() {
     setError,
     formState: { errors },
   } = useForm();
+
   const [errorMessage, setErrorMessage] = useState(undefined);
+  const [isSigningIn, setIsSigningIn] = useState(false);
+
   const navigate = useNavigate();
   const { signIn } = useAuth();
 
@@ -51,8 +54,6 @@ export default function SignIn() {
       setIsSigningIn(false);
     }
   };
-
-  const [isSigningIn, setIsSigningIn] = useState(false);
 
   return (
     <Box

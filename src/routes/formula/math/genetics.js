@@ -219,12 +219,18 @@ function getVo2(pulse, age) {
 
 function getRMR(weightInKg, heightInCentimeter, age, sex) {
   if (sex === "male" || sex === "Male") {
-    return Math.round(
-      66.5 + 13.75 * weightInKg + 5.003 * heightInCentimeter - 6.75 * age
+    // return Math.round(
+    //   66.5 + 13.75 * weightInKg + 5.003 * heightInCentimeter - 6.75 * age
+    // );
+    return unitchange.removeDecimal(
+      10 * weightInKg + 6.25 * heightInCentimeter - 5 * age + 5
     );
   } else {
-    return Math.floor(
-      655.1 + 9.563 * weightInKg + 1.85 * heightInCentimeter - 4.676 * age
+    // return Math.floor(
+    //   655.1 + 9.563 * weightInKg + 1.85 * heightInCentimeter - 4.676 * age
+    // );
+    return unitchange.removeDecimal(
+      10 * weightInKg + 6.25 * heightInCentimeter - 5 * age - 161
     );
   }
 }

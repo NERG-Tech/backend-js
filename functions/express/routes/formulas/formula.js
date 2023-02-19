@@ -83,6 +83,9 @@ function calculation(sex, age, weight, height, name, sport, position) {
   const list = {
     sex: sex,
     age: age,
+    name: name,
+    sport: sport,
+    position: position,
     weight: { kg: parseFloat(weightInKg), pounds: parseFloat(weightInPound) },
     height: {
       mt: parseFloat(heightInMeter),
@@ -111,9 +114,6 @@ function calculation(sex, age, weight, height, name, sport, position) {
     },
     bloodVolumn: { value: parseFloat(bv), unit: "ml" },
     rmr: { value: parseFloat(rmr), unit: "kcal / day" },
-    name: name,
-    sport: sport,
-    position: position,
   };
   return list;
 }

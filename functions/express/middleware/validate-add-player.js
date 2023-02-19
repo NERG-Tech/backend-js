@@ -1,5 +1,5 @@
 function validatePlayer(req, res, next) {
-  const { sex, age, weight, height } = req.body;
+  const { sex, age, weight, height, name, sport, position } = req.body;
 
   if (!weight || isNaN(weight)) {
     res.status(500).send("no-weight");
