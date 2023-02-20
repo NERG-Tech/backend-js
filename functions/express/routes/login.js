@@ -14,7 +14,7 @@ async function login(req, res) {
       password
     );
     const token = await getAdminAuth().createCustomToken(credential.user.uid);
-    res.status(200).json({ token });
+    res.status(200).json({ token, status: "success" });
   } catch (error) {
     if (
       error.code === "auth/wrong-password" ||
@@ -26,6 +26,7 @@ async function login(req, res) {
     }
     res.json({
       error: { code: error.code.replace("auth/", "") },
+      status: "fail",
     });
   }
 }

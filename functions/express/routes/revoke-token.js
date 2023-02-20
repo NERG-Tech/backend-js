@@ -19,7 +19,9 @@ async function firebaseAuth(req, res) {
 
     res.status(200).json({ status: "success", uid: uid });
   } catch (err) {
-    res.status(401).json({ error: { code: "unauthenticated" } });
+    res
+      .status(401)
+      .json({ error: { code: "unauthenticated" }, status: "fail" });
   }
 }
 

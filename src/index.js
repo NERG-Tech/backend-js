@@ -10,6 +10,7 @@ import firebaseConfig from "./firebase.config";
 import SignUp from "./routes/SignUp";
 import SignIn from "./routes/SignIn";
 import AddPlayer from "./routes/AddPlayer";
+import ShowPlayer from "./routes/ShowPlayer";
 
 initializeApp(firebaseConfig);
 
@@ -23,6 +24,7 @@ root.render(
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/add-player" element={<AddPlayer />} />
+          <Route path="/show-player" element={<ShowPlayer />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

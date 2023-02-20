@@ -75,9 +75,12 @@ function App() {
       >
         {child}
       </div>
-      <Box>
+      <Box style={{ display: "flex", justifyContent: "center" }}>
         <Button LinkComponent={Link} to="/add-player">
           Add a player
+        </Button>
+        <Button LinkComponent={Link} to="/show-player">
+          Show Player Info
         </Button>
       </Box>
     </>

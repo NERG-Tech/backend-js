@@ -11,7 +11,7 @@ async function getVo2(req, res) {
     .doc("one-player")
     .get();
   if (!snapshot.exists) {
-    res.status(404).json({ error: { code: "user-not-found" } });
+    res.status(404).json({ error: { code: "user-not-found" }, status: "fail" });
     return;
   }
   const playerData = snapshot.data();
@@ -33,6 +33,7 @@ async function getVo2(req, res) {
     result: result,
     list: list,
     player: playerData,
+    status: "success",
   });
 }
 

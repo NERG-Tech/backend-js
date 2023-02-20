@@ -31,6 +31,7 @@ async function addKeyMeasurements(req, res) {
   res.status(200).json({
     result: result,
     measure: measure,
+    status: "success",
   });
 }
 

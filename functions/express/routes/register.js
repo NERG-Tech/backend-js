@@ -5,7 +5,7 @@ const firestore = require("firebase-admin").firestore();
 async function register(req, res) {
   const { email, password, secureNote } = req.body;
   if (!secureNote) {
-    res.status(400).json({ error: { code: "no-secure-note" } });
+    res.status(400).json({ error: { code: "no-secure-note" }, status: "fail" });
     return;
   }
 
@@ -19,7 +19,7 @@ async function register(req, res) {
     const adminAuth = getAdminAuth();
     const token = await adminAuth.createCustomToken(credential.user.uid);
     await firestore.doc(`users/${credential.user.uid}`).set({ secureNote });
-    res.status(201).json({ token });
+    res.status(201).json({ token, status: "success" });
   } catch (err) {
     const { code } = err;
     if (code === "auth/email-already-in-use") {
@@ -31,6 +31,7 @@ async function register(req, res) {
       error: {
         code: code ? code.replace("auth/", "") : undefined,
       },
+      status: "fail",
     });
   }
 }

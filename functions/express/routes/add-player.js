@@ -21,7 +21,7 @@ async function addPlayer(req, res) {
 
   const result = await onePlayer.set(list);
 
-  res.status(200).json({ result: result, list: list });
+  res.status(200).json({ result: result, list: list, status: "success" });
 }
 
 module.exports = addPlayer;

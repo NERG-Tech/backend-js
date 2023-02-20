@@ -47,6 +47,12 @@ export async function getUserData({ userIdToken, userId }) {
   return res.data;
 }
 
+export async function getPlayer() {
+  const url = `${apiUrl}/player`;
+  const res = await axios.get(url, {});
+  return res.data;
+}
+
 export async function signout(userId) {
   console.log("userId", userId);
 
