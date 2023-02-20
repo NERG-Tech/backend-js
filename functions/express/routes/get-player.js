@@ -6,7 +6,9 @@ async function getPlayer(req, res) {
     .doc("one-player")
     .get();
   if (!snapshot.exists) {
-    res.status(404).json({ error: { code: "player-not-found" } });
+    res
+      .status(404)
+      .json({ error: { code: "player-not-found" }, status: "fail" });
     return;
   }
   const player = snapshot.data();
