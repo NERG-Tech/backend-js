@@ -1,18 +1,16 @@
 const { getAuth } = require("firebase-admin/auth");
 
-async function validateToken(req, res) {
+async function validateToken(req, res, next) {
   const regex = /Bearer (.+)/i;
 
   try {
     const idToken = req.headers["authorization"].match(regex)?.[1];
-    // res.status(200).json({ idToken: idToken });
 
     getAuth()
       .verifyIdToken(idToken)
       .then((decodedToken) => {
         const uid = decodedToken.uid;
-
-        res.status(200).json({ status: "success", uid: uid });
+        next(uid);
       })
       .catch((error) => {
         res.status(200).json({ status: "fail", error: error });

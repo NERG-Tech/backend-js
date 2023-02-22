@@ -1,6 +1,6 @@
 const { getAuth } = require("firebase-admin/auth");
 
-async function firebaseAuth(req, res) {
+async function revokeToken(req, res) {
   const uid = req.params.uid;
   try {
     // Revoke all refresh tokens for a specified user for whatever reason.
@@ -15,9 +15,13 @@ async function firebaseAuth(req, res) {
       })
       .then((timestamp) => {
         console.log(`Tokens revoked at: ${timestamp}`);
-      });
 
-    res.status(200).json({ status: "success", uid: uid });
+        res.status(200).json({
+          status: "success",
+          uid: uid,
+          time: `Tokens revoked at: ${timestamp}`,
+        });
+      });
   } catch (err) {
     res
       .status(401)
@@ -25,4 +29,4 @@ async function firebaseAuth(req, res) {
   }
 }
 
-module.exports = firebaseAuth;
+module.exports = revokeToken;

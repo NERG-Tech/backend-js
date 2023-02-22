@@ -1,11 +1,13 @@
 const {
   getAuth: getClientAuth,
   signInWithEmailAndPassword,
+  // signInWithCustomToken,
 } = require("firebase/auth");
 
 const { getAuth: getAdminAuth } = require("firebase-admin/auth");
 
 async function login(req, res) {
+  // const auth = getClientAuth();
   const { email, password } = req.body;
   try {
     const credential = await signInWithEmailAndPassword(
@@ -14,7 +16,14 @@ async function login(req, res) {
       password
     );
     const token = await getAdminAuth().createCustomToken(credential.user.uid);
-    res.status(200).json({ token, status: "success" });
+
+    // await signInWithCustomToken(auth, token);
+
+    res.status(200).json({
+      token,
+      status: "success",
+      uid: credential,
+    });
   } catch (error) {
     if (
       error.code === "auth/wrong-password" ||

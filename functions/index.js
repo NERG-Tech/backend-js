@@ -21,6 +21,7 @@ const validateVo2 = require("./express/middleware/validate-vo2");
 const validateMet = require("./express/middleware/validate-met");
 const validateKeyMeasurements = require("./express/middleware/validate-key-measurements");
 const validateGeneticHealth = require("./express/middleware/validate-genetic-health");
+const validateToken = require("./express/middleware/validate-token");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -39,8 +40,10 @@ const addKeyMeasurements = require("./express/routes/add-key-measurements");
 const addGeneticHealth = require("./express/routes/add-genetic-health");
 const signout = require("./express/routes/signout");
 const validateUserToken = require("./express/routes/validate-user-token");
+
 const removeToken = require("./express/routes/revoke-token");
 const getPlayer = require("./express/routes/get-player");
+// const test = require("./express/routes/test");
 
 const app = express();
 app.use(cors());
@@ -49,14 +52,18 @@ app.use(morgan("dev"));
 // listen
 app.get("/users/:id", firebaseAuth, getUser);
 app.get("/player", getPlayer);
-app.get("/user/validate", validateUserToken);
+app.get("/user/validateToken/", validateUserToken);
+// app.get("/test", validateToken, test);
 
-app.post("/user/revoke/:uid", removeToken);
+app.post("/user/revoke/:uid", removeToken); // this is signout
+
 app.post("/signout", signout);
 app.post("/login", validateEmailAndPassword, login);
 app.post("/register", validateEmailAndPassword, register);
+
 app.post("/player", validatePlayer, addPlayer);
 app.post("/player/wh", validateWaistHip, addWaistHip);
+
 app.post("/player/vo2", validateVo2, addVo2);
 app.post("/player/met", validateMet, addMet);
 app.post("/player/key", validateKeyMeasurements, addKeyMeasurements);

@@ -1,27 +1,42 @@
 const formula = require("./formulas/formula");
 const firestore = require("firebase-admin").firestore();
+const { getAuth } = require("firebase-admin/auth");
 
 async function addPlayer(req, res) {
-  // weight is in pound & height is in feet
-  const { sex, age, weight, height, name, sport, position } = req.body;
+  try {
+    const { idToken } = req.body;
 
-  const list = formula.calculation(
-    sex,
-    age,
-    weight,
-    height,
-    name,
-    sport,
-    position
-  );
+    getAuth()
+      .verifyIdToken(idToken)
+      .then(async (decodedToken) => {
+        const uid = decodedToken.uid;
 
-  // start to put it into db
-  const playersDB = firestore.collection("players");
-  const onePlayer = playersDB.doc("one-player");
+        // weight is in pound & height is in feet
+        const { sex, age, weight, height, name, sport, position } = req.body;
+        const list = formula.calculation(
+          sex,
+          age,
+          weight,
+          height,
+          name,
+          sport,
+          position
+        );
 
-  const result = await onePlayer.set(list);
+        // start to put it into db
+        const playersDB = firestore.collection("players");
+        const onePlayer = playersDB.doc("one-player");
 
-  res.status(200).json({ result: result, list: list, status: "success" });
+        const result = await onePlayer.set(list);
+
+        res.status(200).json({
+          result: result,
+          list: list,
+          status: "success",
+          // idToken: idToken,
+        });
+      });
+  } catch (error) {}
 }
 
 module.exports = addPlayer;
