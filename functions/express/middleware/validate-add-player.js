@@ -7,41 +7,43 @@ function validatePlayer(req, res, next) {
   }
   if (!height || isNaN(height)) {
     res.status(500).send({ error: "no-height" });
-    // res.status(500).json({ error: "no-weight" });
     return;
   }
   if (!age || isNaN(age)) {
     res.status(500).send({ error: "no-age" });
-    // res.status(400).json({ error: { code: "no-age" } });
     return;
   }
   if (!sex) {
     res.status(500).send({ error: "no-sex" });
-    // res.status(400).json({ error: { code: "no-sex-type" } });
     return;
   }
   if (sex !== "Male" && sex !== "Female") {
     res.status(500).send({ error: "invalid-sex-type" });
-    // res.status(400).json({ error: { code: "invalid-sex-type" } });
     return;
   }
   if (!name) {
     res.status(500).send({ error: "no-name" });
-    // res.status(400).json({ error: { code: "no-sex-type" } });
     return;
   }
   if (!sport) {
     res.status(500).send({ error: "no-sport" });
-    // res.status(400).json({ error: { code: "no-sex-type" } });
     return;
   }
   if (!position) {
     res.status(500).send({ error: "no-position" });
-    // res.status(400).json({ error: { code: "no-sex-type" } });
     return;
   }
-
-  next();
+  if (
+    sex === "Male" ||
+    sex === "male" ||
+    sex === "female" ||
+    sex === "Female"
+  ) {
+    next();
+  } else {
+    res.status(500).send({ error: "invalid-sex-type" });
+    return;
+  }
 }
 
 module.exports = validatePlayer;

@@ -33,12 +33,12 @@ async function addWaistHip(req, res) {
         });
       })
       .catch((error) => {
-        res.status(200).json({ status: "fail", error: error });
+        res
+          .status(401)
+          .json({ error: "token-invalid", status: "fail", errorMsg: error });
       });
   } catch (err) {
-    res
-      .status(401)
-      .json({ error: { code: "unauthenticated" }, status: "fail" });
+    res.status(401).json({ error: err, status: "fail" });
   }
 }
 

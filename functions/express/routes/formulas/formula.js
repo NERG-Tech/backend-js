@@ -9,8 +9,8 @@ function getVo2(pulse, age) {
   return genetics.getVo2(pulse, age);
 }
 
-function getMET(sex, minutes, seconds) {
-  return genetics.getMET(sex, minutes, seconds);
+function getMET(sex, time) {
+  return genetics.getMET(sex, time);
 }
 
 function calculation(sex, age, weight, height, name, sport, position) {
@@ -84,8 +84,8 @@ function calculation(sex, age, weight, height, name, sport, position) {
     sex: sex,
     age: age,
     name: name,
-    sport: sport,
     position: position,
+    sport: sport,
     weight: { kg: parseFloat(weightInKg), pounds: parseFloat(weightInPound) },
     height: {
       mt: parseFloat(heightInMeter),

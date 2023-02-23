@@ -51,7 +51,7 @@ app.use(morgan("dev"));
 
 // listen
 app.get("/users/:id", firebaseAuth, getUser);
-app.get("/player", getPlayer);
+app.get("/player/:idToken", getPlayer);
 app.get("/user/validateToken/", validateUserToken);
 // app.get("/test", validateToken, test);
 

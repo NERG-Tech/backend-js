@@ -134,7 +134,7 @@ export default function AddPlayer() {
       setWhList(formula.getWaistToHip(waist, hip));
       let vo2 = formula.getVo2(beats, age);
       setVo2(vo2);
-
+      console.log("formula.getMET(sex, minutes, seconds)");
       setMet(formula.getMET(sex, minutes, seconds));
 
       await apiService

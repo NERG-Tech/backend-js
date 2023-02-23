@@ -13,7 +13,7 @@ function getMET(sex, minutes, seconds) {
   return genetics.getMET(sex, minutes, seconds);
 }
 
-function calculation(sex, age, weight, height) {
+function calculation(sex, age, weight, height, name, sport, position) {
   // weight
   const weightInPound = weight;
   const weightInKg = unitchange.changePoundToKg(weight);
@@ -83,6 +83,9 @@ function calculation(sex, age, weight, height) {
   const list = {
     sex: sex,
     age: age,
+    name: name,
+    position: position,
+    sport: sport,
     weight: { kg: parseFloat(weightInKg), pounds: parseFloat(weightInPound) },
     height: {
       mt: parseFloat(heightInMeter),

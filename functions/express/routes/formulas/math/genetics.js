@@ -219,12 +219,18 @@ function getVo2(pulse, age) {
 
 function getRMR(weightInKg, heightInCentimeter, age, sex) {
   if (sex === "male" || sex === "Male") {
-    return Math.round(
-      66.5 + 13.75 * weightInKg + 5.003 * heightInCentimeter - 6.75 * age
+    // return Math.round(
+    //   66.5 + 13.75 * weightInKg + 5.003 * heightInCentimeter - 6.75 * age
+    // );
+    return unitchange.removeDecimal(
+      10 * weightInKg + 6.25 * heightInCentimeter - age * 5 + 5
     );
   } else {
-    return Math.floor(
-      655.1 + 9.563 * weightInKg + 1.85 * heightInCentimeter - 4.676 * age
+    // return Math.floor(
+    //   655.1 + 9.563 * weightInKg + 1.85 * heightInCentimeter - 4.676 * age
+    // );
+    return unitchange.removeDecimal(
+      10 * weightInKg + 6.25 * heightInCentimeter - 5 * age - 161
     );
   }
 }
@@ -235,16 +241,17 @@ function getRMR(weightInKg, heightInCentimeter, age, sex) {
  * time : the time you spent on running on a trademill
  */
 
-function getMET(sex, minutes, seconds) {
-  let T = minutes + seconds * 0.0165;
-  // console.log("T", T);
+function getMET(sex, time) {
   if (sex === "male" || sex === "Male") {
     return (
-      (14.8 - 1.379 * T + 0.451 * Math.pow(T, 2) - 0.012 * Math.pow(T, 3)) /
+      (14.8 -
+        1.379 * time +
+        0.451 * Math.pow(time, 2) -
+        0.012 * Math.pow(time, 3)) /
       3.5
     ).toFixed(2);
   } else {
-    return ((4.38 * T - 3.9) / 3.5).toFixed(2);
+    return ((4.38 * time - 3.9) / 3.5).toFixed(2);
   }
 }
 
