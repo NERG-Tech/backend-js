@@ -1,4 +1,5 @@
 const firestore = require("firebase-admin").firestore();
+const DB = require("./db/dbNames");
 
 async function getUser(req, res) {
   const userId = req.params.id;
@@ -11,7 +12,7 @@ async function getUser(req, res) {
     res.status(403).json({ error: { code: "unauthorized" }, status: "fail" });
   }
 
-  const snapshot = await firestore.collection("users").doc(userId).get();
+  const snapshot = await firestore.collection(DB.USERS).doc(userId).get();
   if (!snapshot.exists) {
     res.status(404).json({ error: { code: "user-not-found" }, status: "fail" });
     return;

@@ -1,6 +1,7 @@
 const formula = require("./formulas/formula");
 const firestore = require("firebase-admin").firestore();
 // const { getAuth } = require("firebase-admin/auth");
+const DB = require("./db/dbNames");
 
 async function getVo2(req, res) {
   // weight is in pound & height is in feet
@@ -8,7 +9,7 @@ async function getVo2(req, res) {
 
   // get the age from db
   const snapshot = await firestore
-    .collection("players")
+    .collection(DB.PLAYERS)
     .doc("one-player")
     .get();
   if (!snapshot.exists) {
@@ -19,7 +20,7 @@ async function getVo2(req, res) {
   const age = playerData.age;
 
   // get vo2 and set the data into the player db
-  const playersDB = firestore.collection("players");
+  const playersDB = firestore.collection(DB.PLAYERS);
   const onePlayer = playersDB.doc("one-player");
 
   const vo2 = formula.getVo2(parseInt(pulse), parseInt(age));

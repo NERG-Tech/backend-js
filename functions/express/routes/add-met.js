@@ -24,7 +24,7 @@ async function getMetValue(req, res) {
     const time = parseInt(minutes) + parseInt(seconds) * 0.0165;
 
     const met = formula.getMET(sex, time);
-    const list = { met: { value: met, unit: "METs" } };
+    const list = { met: { value: met, unit: "METs", minutes, seconds } };
 
     const result = await firestore
       .collection(DB.PLAYERS)

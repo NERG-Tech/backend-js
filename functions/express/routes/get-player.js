@@ -1,10 +1,10 @@
 const firestore = require("firebase-admin").firestore();
-
+const DB = require("./db/dbNames");
 // get request
 async function getPlayer(req, res) {
   try {
     const snapshot = await firestore
-      .collection("players")
+      .collection(DB.PLAYERS)
       .doc("one-player")
       .get();
 

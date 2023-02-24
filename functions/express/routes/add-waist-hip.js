@@ -1,6 +1,7 @@
 const formula = require("./formulas/formula");
 const firestore = require("firebase-admin").firestore();
 // const { getAuth } = require("firebase-admin/auth");
+const DB = require("./db/dbNames");
 
 async function addWaistHip(req, res) {
   try {
@@ -8,7 +9,7 @@ async function addWaistHip(req, res) {
     const { waist, hip } = req.body;
     const ratio = formula.getWaistToHip(waist, hip);
 
-    const playersDB = firestore.collection("players");
+    const playersDB = firestore.collection(DB.PLAYERS);
     const onePlayer = playersDB.doc("one-player");
 
     const result = await onePlayer.set(
