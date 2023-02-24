@@ -20,7 +20,7 @@ async function login(req, res) {
     // await signInWithCustomToken(auth, token);
 
     res.status(200).json({
-      token,
+      customToken: token,
       status: "success",
       uid: credential,
     });

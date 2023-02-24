@@ -13,15 +13,15 @@ const morgan = require("morgan");
 const serviceAccount = require("./service-account-key.json");
 
 // middleware
+
 const validateEmailAndPassword = require("./express/middleware/validate-email-and-password");
-const firebaseAuth = require("./express/middleware/firebase-auth");
 const validatePlayer = require("./express/middleware/validate-add-player");
 const validateWaistHip = require("./express/middleware/validate-waist-hip");
 const validateVo2 = require("./express/middleware/validate-vo2");
 const validateMet = require("./express/middleware/validate-met");
 const validateKeyMeasurements = require("./express/middleware/validate-key-measurements");
 const validateGeneticHealth = require("./express/middleware/validate-genetic-health");
-const validateToken = require("./express/middleware/validate-token");
+const auth = require("./express/middleware/auth-with-custom-token");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -38,35 +38,28 @@ const addVo2 = require("./express/routes/add-vo2");
 const addMet = require("./express/routes/add-met");
 const addKeyMeasurements = require("./express/routes/add-key-measurements");
 const addGeneticHealth = require("./express/routes/add-genetic-health");
-const signout = require("./express/routes/signout");
-const validateUserToken = require("./express/routes/validate-user-token");
-
 const removeToken = require("./express/routes/revoke-token");
 const getPlayer = require("./express/routes/get-player");
-// const test = require("./express/routes/test");
 
 const app = express();
 app.use(cors());
 app.use(morgan("dev"));
 
 // listen
-app.get("/users/:id", firebaseAuth, getUser);
-app.get("/player/:idToken", getPlayer);
-app.get("/user/validateToken/", validateUserToken);
-// app.get("/test", validateToken, test);
 
-app.post("/user/revoke/:uid", removeToken); // this is signout
+app.post("/player", auth, validatePlayer, addPlayer);
 
-app.post("/signout", signout);
+app.get("/users/:id", auth, getUser);
+app.get("/player/:idToken", auth, getPlayer);
+app.post("/player/wh", auth, validateWaistHip, addWaistHip);
+app.post("/player/vo2", auth, validateVo2, addVo2);
+app.post("/player/met", auth, validateMet, addMet);
+app.post("/player/key", auth, validateKeyMeasurements, addKeyMeasurements);
+app.post("/player/genetic", auth, validateGeneticHealth, addGeneticHealth);
+
+// without auth check
 app.post("/login", validateEmailAndPassword, login);
 app.post("/register", validateEmailAndPassword, register);
-
-app.post("/player", validatePlayer, addPlayer);
-app.post("/player/wh", validateWaistHip, addWaistHip);
-
-app.post("/player/vo2", validateVo2, addVo2);
-app.post("/player/met", validateMet, addMet);
-app.post("/player/key", validateKeyMeasurements, addKeyMeasurements);
-app.post("/player/genetic", validateGeneticHealth, addGeneticHealth);
+app.post("/user/revoke/:uid", removeToken); // this is signout
 
 exports.api = functions.https.onRequest(app);

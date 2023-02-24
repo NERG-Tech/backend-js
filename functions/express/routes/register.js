@@ -21,7 +21,7 @@ async function register(req, res) {
     await firestore.doc(`users/${credential.user.uid}`).set({ secureNote });
 
     res.status(200).json({
-      token,
+      customToken: token,
       status: "success",
       uid: credential,
     });
