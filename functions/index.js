@@ -50,7 +50,7 @@ app.use(morgan("dev"));
 app.post("/player", auth, validatePlayer, addPlayer);
 
 app.get("/users/:id", auth, getUser);
-app.get("/player/:idToken", auth, getPlayer);
+app.get("/player/:idToken", getPlayer);
 app.post("/player/wh", auth, validateWaistHip, addWaistHip);
 app.post("/player/vo2", auth, validateVo2, addVo2);
 app.post("/player/met", auth, validateMet, addMet);
@@ -60,6 +60,6 @@ app.post("/player/genetic", auth, validateGeneticHealth, addGeneticHealth);
 // without auth check
 app.post("/login", validateEmailAndPassword, login);
 app.post("/register", validateEmailAndPassword, register);
-app.post("/user/revoke/:uid", removeToken); // this is signout
+app.post("/user/revoke", removeToken); // this is signout
 
 exports.api = functions.https.onRequest(app);

@@ -1,35 +1,62 @@
 const formula = require("./formulas/formula");
 const firestore = require("firebase-admin").firestore();
-// const { getAuth } = require("firebase-admin/auth");
+const { signInWithCustomToken, getAuth } = require("firebase/auth");
 const DB = require("./db/dbNames");
 
 async function addPlayer(req, res) {
   try {
-    // weight is in pound & height is in feet
-    const { sex, age, weight, height, name, sport, position, user } = req.body;
-    const list = formula.calculation(
-      sex,
-      age,
-      weight,
-      height,
-      name,
-      sport,
-      position
-    );
+    const auth = getAuth();
 
-    const onePlayer = firestore.collection(DB.PLAYERS).doc("one-player");
-    const playerId = onePlayer.id;
-    await onePlayer.set({ ...list }, { merge: true });
+    const { idToken } = req.body;
 
-    // return
-    res.status(200).json({
-      list: list,
-      status: "success",
-      playerId: playerId,
-      uid: user,
-      // usersPlayerList: usersPlayerList,
-    });
-    return;
+    signInWithCustomToken(auth, idToken)
+      .then(async (userCredential) => {
+        const user = userCredential.user;
+
+        const { sex, age, weight, height, name, sport, position } = req.body;
+        const list = formula.calculation(
+          sex,
+          age,
+          weight,
+          height,
+          name,
+          sport,
+          position
+        );
+
+        const onePlayer = firestore.collection(DB.PLAYERS).doc("one-player");
+        const playerId = onePlayer.id;
+        await onePlayer.set({ ...list }, { merge: true });
+
+        const userDoc = await firestore.doc(`${DB.USERS}/${user.uid}`).get();
+
+        let newList = [{ playerId, created: new Date() }];
+        if (userDoc.data().playerList) {
+          newList = [...userDoc.data().playerList, ...newList];
+        }
+        const userDoc2 = await firestore
+          .doc(`users/${user.uid}`)
+          .set({ playerList: newList }, { merge: true });
+
+        // return
+        res.status(200).json({
+          list: list,
+          status: "success",
+          playerId: playerId,
+          userDoc2: userDoc2,
+        });
+        return;
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+
+        res.status(401).json({
+          error: { code: "unauthenticated" },
+          errorCode,
+          errorMessage,
+        });
+      });
   } catch (error) {}
 }
 
