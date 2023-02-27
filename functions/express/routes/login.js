@@ -7,7 +7,6 @@ const {
 const { getAuth: getAdminAuth } = require("firebase-admin/auth");
 
 async function login(req, res) {
-  // const auth = getClientAuth();
   const { email, password } = req.body;
   try {
     const credential = await signInWithEmailAndPassword(

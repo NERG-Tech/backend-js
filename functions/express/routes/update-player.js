@@ -4,60 +4,48 @@ const { signInWithCustomToken, getAuth } = require("firebase/auth");
 const DB = require("./db/dbNames");
 
 async function addPlayer(req, res) {
-  try {
-    const auth = getAuth();
+  const auth = getAuth();
+  const { idToken } = req.body;
 
-    const { idToken } = req.body;
+  signInWithCustomToken(auth, idToken)
+    .then(async (userCredential) => {
+      const user = userCredential.user;
 
-    signInWithCustomToken(auth, idToken)
-      .then(async (userCredential) => {
-        const user = userCredential.user;
+      const { sex, age, weight, height, name, sport, position } = req.body;
+      const list = formula.calculation(
+        sex,
+        age,
+        weight,
+        height,
+        name,
+        sport,
+        position
+      );
 
-        const { sex, age, weight, height, name, sport, position } = req.body;
-        const list = formula.calculation(
-          sex,
-          age,
-          weight,
-          height,
-          name,
-          sport,
-          position
-        );
+      const onePlayer = firestore.collection(DB.PLAYERS).doc("one-player");
+      const playerId = onePlayer.id;
+      await onePlayer.set({ ...list }, { merge: true });
 
-        const onePlayer = firestore.collection(DB.PLAYERS).doc("one-player");
-        const playerId = onePlayer.id;
-        await onePlayer.set({ ...list }, { merge: true });
+      const playerValues = onePlayer.get();
 
-        const userDoc = await firestore.doc(`${DB.USERS}/${user.uid}`).get();
+      // update MET because sex is updated
 
-        let newList = [{ playerId, created: new Date() }];
-        if (userDoc.data().playerList) {
-          newList = [...userDoc.data().playerList, ...newList];
-        }
-        const userDoc2 = await firestore
-          .doc(`users/${user.uid}`)
-          .set({ playerList: newList }, { merge: true });
+      // update Vo2 because age is updated
 
-        // return
-        res.status(200).json({
-          list: list,
-          status: "success",
-          playerId: playerId,
-          userDoc2: userDoc2,
-        });
-        return;
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-
-        res.status(401).json({
-          error: { code: "unauthenticated" },
-          errorCode,
-          errorMessage,
-        });
+      // return
+      res.status(200).json({
+        list: list,
+        status: "success",
+        playerId: playerId,
+        playerValues,
       });
-  } catch (error) {}
+      return;
+    })
+    .catch(() => {
+      res.status(401).json({
+        error: { code: "token-expired" },
+      });
+    });
 }
 
 module.exports = addPlayer;

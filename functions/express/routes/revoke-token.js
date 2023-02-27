@@ -12,8 +12,6 @@ async function revokeToken(req, res) {
         const user = userCredential.user;
         const uid = user.uid;
 
-        // Revoke all refresh tokens for a specified user for whatever reason.
-        // Retrieve the timestamp of the revocation, in seconds since the epoch.
         adminAuth()
           .revokeRefreshTokens(uid)
           .then(() => {

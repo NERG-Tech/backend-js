@@ -1,40 +1,48 @@
 const firestore = require("firebase-admin").firestore();
-// const { getAuth } = require("firebase-admin/auth");
+const { signInWithCustomToken, getAuth } = require("firebase/auth");
 const DB = require("./db/dbNames");
 
 async function addKeyMeasurements(req, res) {
-  // weight is in pound & height is in feet
-  const {
-    neckCircumference,
-    wingSpan,
-    handSize,
-    hipsCircumference,
-    gluteCircumference,
-    waistCircumference,
-  } = req.body;
+  const auth = getAuth();
+  const { idToken } = req.body;
 
-  // start to update it into db
+  signInWithCustomToken(auth, idToken)
+    .then(async (userCredential) => {
+      const {
+        neckCircumference,
+        wingSpan,
+        handSize,
+        hipsCircumference,
+        gluteCircumference,
+        waistCircumference,
+      } = req.body;
 
-  const playersDB = firestore.collection(DB.PLAYERS);
-  const onePlayer = playersDB.doc("one-player");
+      const playersDB = firestore.collection(DB.PLAYERS);
+      const onePlayer = playersDB.doc("one-player");
 
-  const measure = {
-    keyMeasurements: {
-      neckCircumference: neckCircumference,
-      wingSpan: wingSpan,
-      handSize: handSize,
-      hipsCircumference: hipsCircumference,
-      gluteCircumference: gluteCircumference,
-      waistCircumference: waistCircumference,
-    },
-  };
-  const result = await onePlayer.set(measure, { merge: true });
+      const measure = {
+        keyMeasurements: {
+          neckCircumference: neckCircumference,
+          wingSpan: wingSpan,
+          handSize: handSize,
+          hipsCircumference: hipsCircumference,
+          gluteCircumference: gluteCircumference,
+          waistCircumference: waistCircumference,
+        },
+      };
+      const result = await onePlayer.set(measure, { merge: true });
 
-  res.status(200).json({
-    result: result,
-    measure: measure,
-    status: "success",
-  });
+      res.status(200).json({
+        result: result,
+        measure: measure,
+        status: "success",
+      });
+    })
+    .catch(() => {
+      res.status(401).json({
+        error: { code: "token-expired" },
+      });
+    });
 }
 
 module.exports = addKeyMeasurements;

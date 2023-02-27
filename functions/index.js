@@ -21,7 +21,6 @@ const validateVo2 = require("./express/middleware/validate-vo2");
 const validateMet = require("./express/middleware/validate-met");
 const validateKeyMeasurements = require("./express/middleware/validate-key-measurements");
 const validateGeneticHealth = require("./express/middleware/validate-genetic-health");
-const auth = require("./express/middleware/auth-with-custom-token");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -40,6 +39,7 @@ const addKeyMeasurements = require("./express/routes/add-key-measurements");
 const addGeneticHealth = require("./express/routes/add-genetic-health");
 const removeToken = require("./express/routes/revoke-token");
 const getPlayer = require("./express/routes/get-player");
+const updatePlayer = require("./express/routes/update-player");
 
 const app = express();
 app.use(cors());
@@ -47,15 +47,18 @@ app.use(morgan("dev"));
 
 // listen
 
-app.post("/player", auth, validatePlayer, addPlayer);
-
-app.get("/users/:id", auth, getUser);
-app.get("/player/:idToken", getPlayer);
-app.post("/player/wh", auth, validateWaistHip, addWaistHip);
-app.post("/player/vo2", auth, validateVo2, addVo2);
-app.post("/player/met", auth, validateMet, addMet);
-app.post("/player/key", auth, validateKeyMeasurements, addKeyMeasurements);
-app.post("/player/genetic", auth, validateGeneticHealth, addGeneticHealth);
+//
+app.get("/users/:id", getUser);
+app.get("/player", getPlayer);
+// put
+app.put("/players", updatePlayer);
+// post
+app.post("/player", validatePlayer, addPlayer);
+app.post("/player/wh", validateWaistHip, addWaistHip);
+app.post("/player/vo2", validateVo2, addVo2);
+app.post("/player/met", validateMet, addMet);
+app.post("/player/key", validateKeyMeasurements, addKeyMeasurements);
+app.post("/player/genetic", validateGeneticHealth, addGeneticHealth);
 
 // without auth check
 app.post("/login", validateEmailAndPassword, login);
