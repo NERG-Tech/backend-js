@@ -20,9 +20,7 @@ function calculation(sex, age, weight, height, name, sport, position) {
   sex = sex.toLowerCase();
 
   // height
-  const heightInFeet = height;
-
-  let obj = unitchange.changeFootToMeter(heightInFeet / 10);
+  let obj = unitchange.changeFeetToMeter(height);
   let heightInMeter = obj.mt;
   const heightInCentimeter = obj.cm;
 
@@ -90,8 +88,8 @@ function calculation(sex, age, weight, height, name, sport, position) {
     height: {
       mt: parseFloat(heightInMeter),
       feet: {
-        feet: Math.floor(parseFloat(heightInFeet) / 10),
-        inch: parseFloat(heightInFeet) % 10,
+        feet: parseFloat(height.feet),
+        inch: parseFloat(height.inch),
       },
       cm: parseFloat(heightInCentimeter),
     },
