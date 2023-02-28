@@ -20,9 +20,9 @@ function removeDecimal(value) {
   return Math.trunc(value);
 }
 
-function changeFootToMeter(value) {
-  let feet = Math.floor(value);
-  let inches = (value * 10) % 10;
+function changeFeetToMeter(value) {
+  let feet = value.feet;
+  let inches = value.inch;
   let num = feet * 30.48 + inches * 2.54;
   let obj = { mt: fourDigitDecimal(num / 100), cm: num };
 
@@ -36,7 +36,7 @@ module.exports = {
   twoDigitDecimal,
   fourDigitDecimal,
   changePoundToKg,
-  changeFootToMeter,
+  changeFeetToMeter,
   changeCmToInches,
   changeKgToPound,
   removeDecimal,
